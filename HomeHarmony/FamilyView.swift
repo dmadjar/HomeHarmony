@@ -43,11 +43,11 @@ struct FamilyView: View {
                                         Spacer()
                                         
                                         Text(family.creator.firstName)
-                                            .padding()
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 5)
                                             .background(.red)
                                             .foregroundStyle(.white)
-                                            .cornerRadius(10)
-
+                                            .cornerRadius(5)
                                     }
                                 }
                                 .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
@@ -60,12 +60,9 @@ struct FamilyView: View {
             .navigationTitle("Families")
             .searchable(text: $search)
             .safeAreaInset(edge: .bottom) {
-                Button {
+                ButtonComponent(title: "Add Family", image: nil, color: .red) {
                     self.isAddingFamily = true
-                } label: {
-                    Text("Add Family")
                 }
-                .modifier(ButtonModifier(bgColor: .red, textColor: .white))
                 .padding()
             }
             .sheet(isPresented: $isAddingFamily, content: {

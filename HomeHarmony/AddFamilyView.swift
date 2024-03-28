@@ -34,7 +34,7 @@ struct AddFamilyView: View {
                         }
                     }
                 }
-                .modifier(ButtonModifier(bgColor: .red, textColor: .white))
+                .buttonStyle(ButtonComponentStyle(image: nil, color: .red))
             }
             
             ScrollView(.horizontal) {
@@ -57,14 +57,11 @@ struct AddFamilyView: View {
                 }
             }
             
-            Button {
+            ButtonComponent(title: "Done", image: nil, color: .red) {
                 Task {
                     await viewModel.createFamily(familyName: familyName, members: members)
                     self.isAddingFamily = false
                 }
-            } label: {
-                Text("Done")
-                    .modifier(ButtonModifier(bgColor: .red, textColor: .white))
             }
         }
         .padding(.horizontal)

@@ -64,14 +64,11 @@ struct AddTaskView: View {
             .padding()
         }
         .safeAreaInset(edge: .bottom) {
-            Button {
+            ButtonComponent(title: "Done!", image: nil, color: .red) {
                 Task {
                     await addTask()
                 }
-            } label: {
-                Text("Done!")
             }
-            .modifier(ButtonModifier(bgColor: .red, textColor: .white))
             .padding()
         }
     }

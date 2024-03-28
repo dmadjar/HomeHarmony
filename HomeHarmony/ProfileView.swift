@@ -11,41 +11,34 @@ struct ProfileView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                Text("Hey \(viewModel.getFirstName())!")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                HStack {
-                    Text("Email:")
-                        .fontWeight(.bold)
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Email:")
+                            .fontWeight(.bold)
+                        
+                        Spacer()
+                        
+                        Text("\(viewModel.getEmail())")
+                    }
+                    .padding()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.black.opacity(0.75), lineWidth: 3)
+                    )
                     
-                    Spacer()
+                    ButtonComponent(title: "Sign Out", image: nil, color: .red) {
+                        signOut()
+                    }
                     
-                    Text("\(viewModel.getEmail())")
+                    ButtonComponent(title: "Delete Account", image: nil, color: .red) {
+                        deleteAccount()
+                    }
                 }
-                .padding()
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(.black.opacity(0.75), lineWidth: 3)
-                )
-                
-                Button {
-                    signOut()
-                } label: {
-                    Text("Sign Out")
-                        .modifier(ButtonModifier(bgColor: .red, textColor: .white))
-                }
-                
-                Button {
-                    deleteAccount()
-                } label: {
-                    Text("Delete Account")
-                        .modifier(ButtonModifier(bgColor: .red, textColor: .white))
-                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .navigationTitle("Hey \(viewModel.getFirstName())!")
         }
     }
     

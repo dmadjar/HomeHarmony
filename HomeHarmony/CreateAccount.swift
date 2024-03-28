@@ -35,11 +35,8 @@ struct CreateAccount: View {
                 SecureField("Confirm Passoword", text: $viewModel.confirmPassword)
                     .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.25)))
                 
-                Button {
+                ButtonComponent(title: "Create Account", image: nil, color: .red) {
                     signUpWithEmailPassword()
-                } label: {
-                    Text("Create Account")
-                        .modifier(ButtonModifier(bgColor: .red, textColor: .white))
                 }
             }
             

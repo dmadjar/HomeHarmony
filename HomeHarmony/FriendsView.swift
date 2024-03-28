@@ -47,6 +47,7 @@ struct FriendsView: View {
                                 
                                 Spacer()
                                 
+                        
                                 Button {
                                     Task {
                                         await viewModel.declineRequest(requestId: request.id)
@@ -83,15 +84,12 @@ struct FriendsView: View {
             .searchable(text: $search)
         }
         .safeAreaInset(edge: .bottom) {
-            Button {
+            ButtonComponent(title: "Add Friend", image: nil, color: .red) {
                 Task {
                     await viewModel.getAllUsersNotFriends()
                     
                     self.isAddingFriend = true
                 }
-            } label: {
-                Text("Add Friend")
-                    .modifier(ButtonModifier(bgColor: .red, textColor: .white))
             }
             .padding()
         }

@@ -104,13 +104,9 @@ struct FamilyDetailView: View {
             .navigationTitle(extractedFamily.familyName)
             .searchable(text: $search)
             .safeAreaInset(edge: .bottom) {
-                Button {
+                ButtonComponent(title: "Add Task", image: nil, color: .red) {
                     self.isAddingTask = true
-                } label: {
-                    Text("Add Task")
                 }
-                .modifier(ButtonModifier(bgColor: .red, textColor: .white))
-                .padding()
             }
             .sheet(isPresented: $isAddingTask, content: {
                 AddTaskView(isAddingTask: $isAddingTask, family: extractedFamily)

@@ -61,11 +61,8 @@ struct AddFriendView: View {
         }
         .searchable(text: $search)
         .safeAreaInset(edge: .bottom) {
-            Button {
+            ButtonComponent(title: "Done", image: nil, color: .red) {
                 self.isAddingFriend = false
-            } label: {
-                Text("Done")
-                    .modifier(ButtonModifier(bgColor: .red, textColor: .white))
             }
             .padding()
         }

@@ -73,11 +73,8 @@ struct LoginView: View {
                 SecureField("Password", text: $viewModel.password)
                     .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.25)))
                     
-                Button {
+                ButtonComponent(title: "Login", image: nil, color: .red) {
                     signInWithEmailPassword()
-                } label: {
-                    Text("Login")
-                        .modifier(ButtonModifier(bgColor: .red, textColor: .white))
                 }
                 
                 Spacer()
@@ -95,11 +92,8 @@ struct LoginView: View {
                     }
                     .opacity(0.5)
                     
-                    Button {
+                    ButtonComponent(title: "Create Account", image: nil, color: .black.opacity(0.75)) {
                         self.isCreatingAccount = true
-                    } label: {
-                        Text("Create Account")
-                            .modifier(ButtonModifier(bgColor: .black, textColor: .white))
                     }
                 }
                 
