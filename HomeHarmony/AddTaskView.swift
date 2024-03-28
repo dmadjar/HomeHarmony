@@ -14,48 +14,78 @@ struct AddTaskView: View {
     
     @State private var taskName: String = ""
     @State private var description: String = ""
-   // @State private var assignee: User? = nil
+    @State private var assignee: CustomUser? = nil
     @State private var finishBy: Date = Date.now
     
-//    let family: Family
+    let family: ExtractedFamily
     
     var body: some View {
-        VStack(spacing: 30) {
-            TextField("Name", text: $taskName)
-            
-            TextField("Description", text: $description)
-            
-            HStack {
-                Menu("Assign Member To Task") {
-//                    ForEach(viewModel.getMembers(family: family)) { member in
-//                        Button {
-//                           // assignee = member
-//                        } label: {
-//                            Text("\(member.name ?? "Not Found") \(member.lastName ?? "Not Found")")
-//                                .font(.title2)
-//                                .fontWeight(.bold)
-//                        }
-//                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 30) {
+                Text("Create Task")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                TextField("Name", text: $taskName)
+                    .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
+                
+                TextField("Description", text: $description)
+                    .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
+                
+                HStack {
+                    Menu("Assign Member To Task") {
+                        ForEach(family.members) { member in
+                            Button {
+                                self.assignee = member
+                            } label: {
+                                Text("\(member.firstName) \(member.lastName)")
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    if let assignee = assignee {
+                        HStack {
+                            Text(assignee.firstName)
+                            
+                            Text(assignee.lastName)
+                        }
+                    }
                 }
+                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
+                
+                DatePicker("Finish by:", selection: $finishBy)
+                                .datePickerStyle(GraphicalDatePickerStyle())
+                                .frame(maxHeight: 400)
             }
-            
-            DatePicker("Finish by:", selection: $finishBy)
-                            .datePickerStyle(GraphicalDatePickerStyle())
-                            .frame(maxHeight: 400)
-            
+            .padding()
+        }
+        .safeAreaInset(edge: .bottom) {
             Button {
-//                viewModel.addTask(
-//                    name: taskName,
-//                    description: description,
-//                    //memberAssigned: assignee!,
-//                    finishBy: finishBy,
-//                    family: family
-//                )
+                Task {
+                    await addTask()
+                }
             } label: {
                 Text("Done!")
             }
+            .modifier(ButtonModifier(bgColor: .red, textColor: .white))
+            .padding()
         }
-        .padding(.horizontal)
+    }
+    
+    private func addTask() async {
+        if let assignee = assignee, let assigneeId = assignee.id, let familyID = family.id {
+            await viewModel.createTask(
+                familyID: familyID,
+                taskName: taskName,
+                description: description,
+                assigneeID: assigneeId,
+                finishBy: finishBy
+            )
+        }
     }
 }
 

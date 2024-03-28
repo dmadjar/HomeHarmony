@@ -27,6 +27,7 @@ struct HomeHarmonyApp: App {
                     .onAppear {
                         Task {
                             await viewModel.getUser()
+                            await viewModel.getYourTasks()
                             await viewModel.getFamilies()
                             await viewModel.getFriendRequests()
                             await viewModel.getFriends()

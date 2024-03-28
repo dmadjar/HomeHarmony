@@ -46,6 +46,8 @@ class AuthenticationViewModel: ObservableObject {
     @Published var families: [ExtractedFamily] = []
     @Published var familiesLoading: Bool = false
     
+    @Published var yourTasks: [TaskItem] = []
+    @Published var tasks: [TaskItem] = []
     
     private var authStateHandler: AuthStateDidChangeListenerHandle?
     

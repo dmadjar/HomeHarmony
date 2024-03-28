@@ -36,6 +36,7 @@ extension AuthenticationViewModel {
                 
                 if let customUser = customUser {
                     let extractedFamily = ExtractedFamily(
+                        id: familyId.documentID,
                         familyName: familyName,
                         creator: customUser,
                         members: Array(members)
@@ -72,6 +73,7 @@ extension AuthenticationViewModel {
                     }
                     
                     let extractedFamily = ExtractedFamily(
+                        id: family.id,
                         familyName: family.familyName,
                         creator: creator,
                         members: members

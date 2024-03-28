@@ -18,6 +18,29 @@ struct FamilyDetailView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 15) {
+                    Text("Tasks")
+                        .font(.title)
+                        .fontWeight(.bold)
+                    
+                    ForEach(viewModel.tasks) { task in
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text(task.taskName)
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                
+                                Spacer()
+                            }
+                            
+                            Text(task.description)
+                        }
+                        .padding()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.black, lineWidth: 3)
+                        )
+                    }
+                    
                     Text("Members")
                         .font(.title)
                         .fontWeight(.bold)
@@ -51,10 +74,19 @@ struct FamilyDetailView: View {
                 } label: {
                     Text("Add Task")
                 }
+                .modifier(ButtonModifier(bgColor: .red, textColor: .white))
+                .padding()
             }
-//            .sheet(isPresented: $isAddingTask, content: {
-//                AddTaskView(isAddingTask: $isAddingTask, family: family)
-//            })
+            .sheet(isPresented: $isAddingTask, content: {
+                AddTaskView(isAddingTask: $isAddingTask, family: extractedFamily)
+            })
+        }
+        .onAppear {
+            Task {
+                if let familyID = extractedFamily.id {
+                    await viewModel.getTasks(familyID: familyID)
+                }
+            }
         }
     }
 }

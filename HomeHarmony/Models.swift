@@ -23,14 +23,17 @@ public struct Family: Codable, Identifiable, Hashable {
 }
 
 public struct ExtractedFamily: Identifiable {
-    public var id: UUID = UUID()
+    public var id: String?
     var familyName: String
     var creator: CustomUser
     var members: [CustomUser]
 }
 
-//public struct Task: Identifiable {
-//    @DocumentID public var id: String?
-//    var description: String
-//    var assigneeID: String
-//}
+public struct TaskItem: Codable, Identifiable {
+    @DocumentID public var id: String?
+    var taskName: String
+    var description: String
+    var assigneeID: String
+    var finishBy: Date
+    var familyID: String
+}
