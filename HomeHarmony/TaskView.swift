@@ -25,20 +25,24 @@ struct TaskView: View {
                     } else {
                         ForEach(taskResults) { task in
                             VStack(alignment: .leading) {
-                                HStack {
+                                HStack(alignment: .top) {
                                     Text(task.taskName)
-                                        .font(.title3)
+                                        .font(.title2)
                                         .fontWeight(.bold)
                                     
                                     Spacer()
+                                    
+                                    IndividualProgressView(progress: task.progress)
                                 }
                                 
                                 Text(task.description)
+                                
+                                ProgressIndicatorView(taskCurrentProgress: task.progress, taskID: task.id)
                             }
                             .padding()
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.black, lineWidth: 3)
+                                    .stroke(.black.opacity(0.75), lineWidth: 3)
                             )
                         }
                     }

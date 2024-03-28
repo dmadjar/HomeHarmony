@@ -14,74 +14,73 @@ struct FriendsView: View {
     @State private var isAddingFriend: Bool = false
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 15) {
-                if !viewModel.friendRequests.isEmpty {
-                    Text("Requests")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    
-                    ForEach(viewModel.friendRequests) { request in
-                        HStack(spacing: 5) {
-                            Text(request.firstName)
-                            
-                            Text(request.lastName)
-                            
-                            Spacer()
-                            
-                            Button {
-                                Task {
-                                    await viewModel.declineRequest(requestId: request.id)
-                                }
-                            } label: {
-                                Image(systemName: "x.circle.fill")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundStyle(.red)
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 15) {
+                    VStack(alignment: .leading, spacing: 15) {
+                        ForEach(friendResults) { friend in
+                            HStack(spacing: 5) {
+                                Text(friend.firstName)
+                                
+                                Text(friend.lastName)
+                                
+                                Spacer()
                             }
-                            
-                            Button {
-                                Task {
-                                    await viewModel.acceptRequest(requestId: request.id)
-                                }
-                            } label: {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundStyle(.green)
-                            }
+                            .padding()
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.black, lineWidth: 3)
+                            )
                         }
-                        .padding()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(.black, lineWidth: 3)
-                        )
+                    }
+                    
+                    if !viewModel.friendRequests.isEmpty {
+                        Text("Requests")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        
+                        ForEach(viewModel.friendRequests) { request in
+                            HStack(spacing: 5) {
+                                Text(request.firstName)
+                                
+                                Text(request.lastName)
+                                
+                                Spacer()
+                                
+                                Button {
+                                    Task {
+                                        await viewModel.declineRequest(requestId: request.id)
+                                    }
+                                } label: {
+                                    Image(systemName: "x.circle.fill")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundStyle(.red)
+                                }
+                                
+                                Button {
+                                    Task {
+                                        await viewModel.acceptRequest(requestId: request.id)
+                                    }
+                                } label: {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundStyle(.green)
+                                }
+                            }
+                            .padding()
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.black, lineWidth: 3)
+                            )
+                        }
                     }
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
-                
-            VStack(alignment: .leading, spacing: 15) {
-                Text("Friends")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                ForEach(viewModel.friends) { friend in
-                    HStack(spacing: 5) {
-                        Text(friend.firstName)
-                        
-                        Text(friend.lastName)
-                        
-                        Spacer()
-                    }
-                    .padding()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.black, lineWidth: 3)
-                    )
-                }
-            }
-            .padding(.horizontal)
+            .navigationTitle("Friends")
+            .searchable(text: $search)
         }
         .safeAreaInset(edge: .bottom) {
             Button {
@@ -98,6 +97,14 @@ struct FriendsView: View {
         }
         .sheet(isPresented: $isAddingFriend) {
             AddFriendView(isAddingFriend: $isAddingFriend)
+        }
+    }
+    
+    var friendResults: [CustomUser] {
+        if search.isEmpty {
+            return viewModel.friends
+        } else {
+            return viewModel.friends.filter { $0.firstName.contains(search) }
         }
     }
 }

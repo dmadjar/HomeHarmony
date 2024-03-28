@@ -83,6 +83,7 @@ struct AddTaskView: View {
                 taskName: taskName,
                 description: description,
                 assigneeID: assigneeId,
+                assignee: assignee,
                 finishBy: finishBy
             )
         }

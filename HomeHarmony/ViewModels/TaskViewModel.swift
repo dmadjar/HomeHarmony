@@ -8,13 +8,14 @@
 import Foundation
 
 extension AuthenticationViewModel {
-    func createTask(familyID: String, taskName: String, description: String, assigneeID: String, finishBy: Date) async {
-        let task = TaskItem(
+    func createTask(familyID: String, taskName: String, description: String, assigneeID: String, assignee: CustomUser, finishBy: Date) async {
+        var task = TaskItem(
             taskName: taskName,
             description: description,
             assigneeID: assigneeID,
             finishBy: finishBy,
-            familyID: familyID
+            familyID: familyID,
+            progress: 0
         )
         
         do {
@@ -23,7 +24,14 @@ extension AuthenticationViewModel {
             let familyTask = db.collection("families").document(familyID).collection("tasks").document(taskRef.documentID)
             try await familyTask.setData([:])
             
-            self.tasks.append(task)
+            let extendedTask = ExtendedTaskItem(
+                task: task,
+                assigneeFirstName: assignee.firstName
+            )
+            
+            await getYourTasks()
+            
+            self.tasks.append(extendedTask)
             print("Successfully created task.")
         } catch {
             print("Failed to create task")
@@ -39,7 +47,14 @@ extension AuthenticationViewModel {
             for document in querySnapshot.documents {
                 let task = try document.data(as: TaskItem.self)
                 
-                self.tasks.append(task)
+                let assignee = try await db.collection("users").document(task.assigneeID).getDocument(as: CustomUser.self)
+                
+                let extendedTask = ExtendedTaskItem(
+                    task: task,
+                    assigneeFirstName: assignee.firstName
+                )
+                
+                self.tasks.append(extendedTask)
             }
             
             print("Retrieved family tasks.")
@@ -51,6 +66,8 @@ extension AuthenticationViewModel {
     func getYourTasks() async {
         do {
             if let user = user {
+                self.yourTasks.removeAll()
+                
                 let querySnapshot = try await db.collection("tasks").whereField("assigneeID", isEqualTo: user.uid).getDocuments()
                 
                 for document in querySnapshot.documents {
@@ -62,6 +79,27 @@ extension AuthenticationViewModel {
             }
         } catch {
             print("Failed to retrieve your tasks.")
+        }
+    }
+    
+    func updateTaskProgress(taskID: String, progress: Int) async {
+        do {
+            let taskDoc = db.collection("tasks").document(taskID)
+            try await taskDoc.updateData([
+                "progress": progress
+            ])
+            
+            for i in 0..<self.yourTasks.count {
+                let id = yourTasks[i].id
+                
+                if id == taskID {
+                    self.yourTasks[i].changeProgress(progress: progress)
+                }
+            }
+            
+            print("Successfully updated progress.")
+        } catch {
+            print("Failed to update task progress.")
         }
     }
 }

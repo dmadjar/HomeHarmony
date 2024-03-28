@@ -29,7 +29,7 @@ struct FamilyView: View {
                                 .cornerRadius(10)
                         }
                     } else {
-                        ForEach(viewModel.families) { family in
+                        ForEach(familyResults) { family in
                             NavigationLink {
                                 FamilyDetailView(extractedFamily: family)
                             } label: {
@@ -71,6 +71,14 @@ struct FamilyView: View {
             .sheet(isPresented: $isAddingFamily, content: {
                 AddFamilyView(isAddingFamily: $isAddingFamily)
             })
+        }
+    }
+    
+    var familyResults: [ExtractedFamily] {
+        if search.isEmpty {
+            return viewModel.families
+        } else {
+            return viewModel.families.filter { $0.familyName.contains(search) }
         }
     }
 }

@@ -7,10 +7,39 @@
 
 import SwiftUI
 
+
+struct ProgressTag: View {
+    let name: String
+    let progress: Int
+    
+    var body: some View {
+        Text(name)
+            .fontWeight(.bold)
+            .foregroundStyle(.white)
+            .padding(10)
+            .background(progressColor())
+            .cornerRadius(5)
+    }
+    
+    private func progressColor() -> Color {
+        switch progress {
+        case 1:
+            return .red
+        case 2:
+            return .yellow
+        case 3:
+            return .green
+        default:
+            return .black
+        }
+    }
+}
+
 struct FamilyDetailView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     
     @State private var isAddingTask: Bool = false
+    @State private var search: String = ""
     
     let extractedFamily: ExtractedFamily
     
@@ -22,17 +51,22 @@ struct FamilyDetailView: View {
                         .font(.title)
                         .fontWeight(.bold)
                     
-                    ForEach(viewModel.tasks) { task in
+                    ForEach(taskResults, id: \.task.id) { extendedTask in
                         VStack(alignment: .leading) {
-                            HStack {
-                                Text(task.taskName)
+                            HStack(alignment: .top) {
+                                Text(extendedTask.task.taskName)
                                     .font(.title3)
                                     .fontWeight(.bold)
                                 
                                 Spacer()
+                                
+                                ProgressTag(
+                                    name: extendedTask.assigneeFirstName,
+                                    progress: extendedTask.task.progress
+                                )
                             }
                             
-                            Text(task.description)
+                            Text(extendedTask.task.description)
                         }
                         .padding()
                         .overlay(
@@ -68,6 +102,7 @@ struct FamilyDetailView: View {
                 .padding(.horizontal)
             }
             .navigationTitle(extractedFamily.familyName)
+            .searchable(text: $search)
             .safeAreaInset(edge: .bottom) {
                 Button {
                     self.isAddingTask = true
@@ -87,6 +122,14 @@ struct FamilyDetailView: View {
                     await viewModel.getTasks(familyID: familyID)
                 }
             }
+        }
+    }
+    
+    private var taskResults: [ExtendedTaskItem] {
+        if search.isEmpty {
+            return viewModel.tasks
+        } else {
+            return viewModel.tasks.filter { $0.task.taskName.contains(search) }
         }
     }
 }

@@ -36,4 +36,14 @@ public struct TaskItem: Codable, Identifiable {
     var assigneeID: String
     var finishBy: Date
     var familyID: String
+    var progress: Int
+    
+    mutating func changeProgress(progress: Int) {
+        self.progress = progress
+    }
+}
+
+public struct ExtendedTaskItem {
+    var task: TaskItem
+    var assigneeFirstName: String
 }
