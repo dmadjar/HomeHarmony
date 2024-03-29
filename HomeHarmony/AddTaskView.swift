@@ -17,7 +17,7 @@ struct AddTaskView: View {
     @State private var assignee: CustomUser? = nil
     @State private var finishBy: Date = Date.now
     
-    let family: ExtractedFamily
+    let family: ExtendedFamily
     
     var body: some View {
         ScrollView {

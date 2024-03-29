@@ -43,7 +43,8 @@ class AuthenticationViewModel: ObservableObject {
     @Published var friends: [CustomUser] = []
     
     
-    @Published var families: [ExtractedFamily] = []
+//    @Published var families: [ExtractedFamily] = []
+    @Published var extendedFamilies: [ExtendedFamily] = []
     @Published var familiesLoading: Bool = false
     
     @Published var yourTasks: [TaskItem] = []
@@ -74,7 +75,7 @@ class AuthenticationViewModel: ObservableObject {
         self.confirmPassword = ""
         self.friends = []
         self.friendRequests = []
-        self.families = []
+        self.extendedFamilies = []
     }
 }
 

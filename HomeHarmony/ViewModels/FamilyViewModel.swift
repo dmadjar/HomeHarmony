@@ -34,15 +34,16 @@ extension AuthenticationViewModel {
                     try await userFamilies.setData([:])
                 }
                 
-                if let customUser = customUser {
-                    let extractedFamily = ExtractedFamily(
+                if let creator = customUser {
+                    let extendedFamily = ExtendedFamily(
                         id: familyId.documentID,
                         familyName: familyName,
-                        creator: customUser,
-                        members: Array(members)
+                        creator: creator, 
+                        members: Array(members),
+                        tasks: []
                     )
                     
-                    self.families.append(extractedFamily)
+                    self.extendedFamilies.append(extendedFamily)
                 }
                 
                 print("Successfully created family.")
@@ -57,12 +58,10 @@ extension AuthenticationViewModel {
             do {
                 self.familiesLoading = true
                 
-                self.families.removeAll()
+                let familySnapshot = try await db.collection("users").document(user.uid).collection("families").getDocuments()
                 
-                let querySnapshot = try await db.collection("users").document(user.uid).collection("families").getDocuments()
-                
-                for doc in querySnapshot.documents {
-                    let family = try await db.collection("families").document(doc.documentID).getDocument(as: Family.self)
+                for familyDoc in familySnapshot.documents {
+                    let family = try await db.collection("families").document(familyDoc.documentID).getDocument(as: Family.self)
                     
                     let creator = try await db.collection("users").document(family.creator).getDocument(as: CustomUser.self)
                     
@@ -72,20 +71,36 @@ extension AuthenticationViewModel {
                         members.append(m)
                     }
                     
-                    let extractedFamily = ExtractedFamily(
+                    var tasks = [ExtendedTaskItem]()
+                    let taskSnapshot = try await db.collection("families").document(familyDoc.documentID).collection("tasks").getDocuments()
+                    for taskDoc in taskSnapshot.documents {
+                        let task = try await db.collection("tasks").document(taskDoc.documentID).getDocument(as: TaskItem.self)
+                        
+                        let assignee = try await db.collection("users").document(task.assigneeID).getDocument(as: CustomUser.self)
+                        
+                        let extendedTaskItem = ExtendedTaskItem(
+                            task: task,
+                            assigneeFirstName: assignee.firstName
+                        )
+                        
+                        tasks.append(extendedTaskItem)
+                    }
+                    
+                    let extendedFamily = ExtendedFamily(
                         id: family.id,
                         familyName: family.familyName,
                         creator: creator,
-                        members: members
+                        members: members,
+                        tasks: tasks
                     )
                     
-                    self.families.append(extractedFamily)
+                    self.extendedFamilies.append(extendedFamily)
                 }
                 
                 self.familiesLoading = false
                 print("Successfully retrieved families.")
             } catch {
-                print("Failed to retrieve users families.")
+                print("Failed to retrieve family.")
             }
         }
     }

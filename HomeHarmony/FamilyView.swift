@@ -33,7 +33,7 @@ struct FamilyView: View {
                     } else {
                         ForEach(familyResults) { family in
                             NavigationLink {
-                                FamilyDetailView(extractedFamily: family)
+                                FamilyDetailView(extendedFamily: family)
                             } label: {
                                 VStack(alignment: .leading) {
                                     HStack {
@@ -41,9 +41,9 @@ struct FamilyView: View {
                                             .font(.title3)
                                             .fontWeight(.bold)
                                             .foregroundStyle(.black)
-                                        
+
                                         Spacer()
-                                        
+
                                         Text(family.creator.firstName)
                                             .fontWeight(.semibold)
                                             .padding(.horizontal, 10)
@@ -55,6 +55,29 @@ struct FamilyView: View {
                                 }
                                 .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
                             }
+//                            NavigationLink {
+//                                FamilyDetailView(extractedFamily: family)
+//                            } label: {
+//                                VStack(alignment: .leading) {
+//                                    HStack {
+//                                        Text(family.familyName)
+//                                            .font(.title3)
+//                                            .fontWeight(.bold)
+//                                            .foregroundStyle(.black)
+//                                        
+//                                        Spacer()
+//                                        
+//                                        Text(family.creator.firstName)
+//                                            .fontWeight(.semibold)
+//                                            .padding(.horizontal, 10)
+//                                            .padding(.vertical, 5)
+//                                            .background(.red)
+//                                            .foregroundStyle(.white)
+//                                            .cornerRadius(5)
+//                                    }
+//                                }
+//                                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
+//                            }
                         }
                     }
                 }
@@ -75,11 +98,11 @@ struct FamilyView: View {
         }
     }
     
-    var familyResults: [ExtractedFamily] {
+    var familyResults: [ExtendedFamily] {
         if search.isEmpty {
-            return viewModel.families
+            return viewModel.extendedFamilies
         } else {
-            return viewModel.families.filter { $0.familyName.contains(search) }
+            return viewModel.extendedFamilies.filter { $0.familyName.contains(search) }
         }
     }
 }

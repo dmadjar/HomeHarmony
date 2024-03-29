@@ -41,7 +41,7 @@ struct FamilyDetailView: View {
     @State private var isAddingTask: Bool = false
     @State private var search: String = ""
     
-    let extractedFamily: ExtractedFamily
+    let extendedFamily: ExtendedFamily
     
     var body: some View {
         NavigationStack {
@@ -79,7 +79,7 @@ struct FamilyDetailView: View {
                         .font(.title)
                         .fontWeight(.bold)
                     
-                    ForEach(extractedFamily.members) { member in
+                    ForEach(extendedFamily.members) { member in
                         HStack(spacing: 5) {
                             Text(member.firstName)
                             
@@ -87,7 +87,7 @@ struct FamilyDetailView: View {
                             
                             Spacer()
                             
-                            if (member.id == extractedFamily.creator.id) {
+                            if (member.id == extendedFamily.creator.id) {
                                 Text("Creator")
                                     .foregroundStyle(.red)
                             }
@@ -101,7 +101,7 @@ struct FamilyDetailView: View {
                 }
                 .padding(.horizontal)
             }
-            .navigationTitle(extractedFamily.familyName)
+            .navigationTitle(extendedFamily.familyName)
             .searchable(text: $search)
             .safeAreaInset(edge: .bottom) {
                 ButtonComponent(title: "Add Task", image: nil, color: .red) {
@@ -110,12 +110,12 @@ struct FamilyDetailView: View {
                 .padding()
             }
             .sheet(isPresented: $isAddingTask, content: {
-                AddTaskView(isAddingTask: $isAddingTask, family: extractedFamily)
+                AddTaskView(isAddingTask: $isAddingTask, family: extendedFamily)
             })
         }
         .onAppear {
             Task {
-                if let familyID = extractedFamily.id {
+                if let familyID = extendedFamily.id {
                     await viewModel.getTasks(familyID: familyID)
                 }
             }
@@ -124,9 +124,9 @@ struct FamilyDetailView: View {
     
     private var taskResults: [ExtendedTaskItem] {
         if search.isEmpty {
-            return viewModel.tasks
+            return extendedFamily.tasks
         } else {
-            return viewModel.tasks.filter { $0.task.taskName.contains(search) }
+            return extendedFamily.tasks.filter { $0.task.taskName.contains(search) }
         }
     }
 }

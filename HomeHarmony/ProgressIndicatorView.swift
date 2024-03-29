@@ -91,7 +91,7 @@ struct IndividualProgressView: View {
                 .padding(.vertical, 5)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(.black.opacity(0.15), lineWidth: 3)
+                        .stroke(.black.opacity(0.15), lineWidth: 2)
                 )
                 .foregroundStyle(.black)
         }
