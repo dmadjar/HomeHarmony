@@ -25,6 +25,8 @@ struct ProgressIndicatorView: View {
    
     let taskCurrentProgress: Int
     
+    let familyID: String
+    
     let taskID: String?
    
     var body: some View {
@@ -35,7 +37,7 @@ struct ProgressIndicatorView: View {
                         let progress = constantProgressIndicators[ind].index
                         
                         Task {
-                            await viewModel.updateTaskProgress(taskID: taskID, progress: progress)
+                            await viewModel.updateTaskProgress(taskID: taskID, familyID: familyID, progress: progress)
                         }
                         
                         print("Getting here.")

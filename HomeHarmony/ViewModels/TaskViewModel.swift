@@ -9,7 +9,7 @@ import Foundation
 
 extension AuthenticationViewModel {
     func createTask(familyID: String, taskName: String, description: String, assigneeID: String, assignee: CustomUser, finishBy: Date) async {
-        let task = TaskItem(
+        var task = TaskItem(
             taskName: taskName,
             description: description,
             assigneeID: assigneeID,
@@ -37,6 +37,7 @@ extension AuthenticationViewModel {
             }
             
             if let user = user {
+                task.id = taskRef.documentID // Line causes warning
                 if assigneeID == user.uid {
                     yourTasks.append(task)
                 }
@@ -68,7 +69,7 @@ extension AuthenticationViewModel {
         }
     }
     
-    func updateTaskProgress(taskID: String, progress: Int) async {
+    func updateTaskProgress(taskID: String, familyID: String, progress: Int) async {
         do {
             let taskDoc = db.collection("tasks").document(taskID)
             try await taskDoc.updateData([
@@ -80,6 +81,20 @@ extension AuthenticationViewModel {
                 
                 if id == taskID {
                     self.yourTasks[i].changeProgress(progress: progress)
+                    break
+                }
+            }
+            
+            for i in 0..<self.extendedFamilies.count {
+                let id = extendedFamilies[i].id
+                
+                if id == familyID {
+                    for j in 0..<extendedFamilies[i].tasks.count {
+                        if taskID == extendedFamilies[i].tasks[j].task.id {
+                            self.extendedFamilies[i].tasks[j].task.changeProgress(progress: progress)
+                            break
+                        }
+                    }
                 }
             }
             

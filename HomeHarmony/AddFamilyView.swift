@@ -59,8 +59,11 @@ struct AddFamilyView: View {
             
             ButtonComponent(title: "Done", image: nil, color: .red) {
                 Task {
-                    await viewModel.createFamily(familyName: familyName, members: members)
-                    self.isAddingFamily = false
+                    if let customUser = viewModel.customUser {
+                        members.insert(customUser)
+                        await viewModel.createFamily(familyName: familyName, members: members)
+                        self.isAddingFamily = false
+                    }
                 }
             }
         }

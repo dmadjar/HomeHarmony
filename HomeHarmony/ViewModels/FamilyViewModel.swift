@@ -13,7 +13,7 @@ import FirebaseFirestore
 extension AuthenticationViewModel {
     func createFamily(familyName: String, members: Set<CustomUser>) async {
         if let user = user {
-            var member_ids: [String] = [user.uid]
+            var member_ids: [String] = []
             for member in members {
                 if let id = member.id {
                     member_ids.append(id)

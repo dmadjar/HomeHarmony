@@ -49,7 +49,7 @@ struct TaskView: View {
                                     )
                                 
                                 if task.progress != 3 {
-                                    ProgressIndicatorView(taskCurrentProgress: task.progress, taskID: task.id)
+                                    ProgressIndicatorView(taskCurrentProgress: task.progress, familyID: task.familyID, taskID: task.id)
                                 }
                             }
                             .padding(10)
