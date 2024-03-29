@@ -9,41 +9,42 @@ import Foundation
 
 extension AuthenticationViewModel {
     func createTask(familyID: String, taskName: String, description: String, assigneeID: String, assignee: CustomUser, finishBy: Date) async {
-        var task = TaskItem(
-            taskName: taskName,
-            description: description,
-            assigneeID: assigneeID,
-            finishBy: finishBy,
-            familyID: familyID,
-            progress: 0
-        )
-        
         do {
+            let task = TaskItem(
+                taskName: taskName,
+                description: description,
+                assigneeID: assigneeID,
+                finishBy: finishBy,
+                familyID: familyID,
+                progress: 0
+            )
+            
             let taskRef = try db.collection("tasks").addDocument(from: task)
+            
+            let taskItem = try await db.collection("tasks").document(taskRef.documentID).getDocument(as: TaskItem.self)
             
             let familyTask = db.collection("families").document(familyID).collection("tasks").document(taskRef.documentID)
             try await familyTask.setData([:])
             
             let extendedTask = ExtendedTaskItem(
-                task: task,
+                task: taskItem,
                 assigneeFirstName: assignee.firstName
             )
             
             for i in 0..<self.extendedFamilies.count {
-                if extendedFamilies[i].id == familyID {
-                    extendedFamilies[i].tasks.append(extendedTask)
+                if self.extendedFamilies[i].id == familyID {
+                    self.extendedFamilies[i].tasks.append(extendedTask)
                     break
                 }
             }
             
             if let user = user {
-                task.id = taskRef.documentID // Line causes warning
                 if assigneeID == user.uid {
-                    yourTasks.append(task)
+                    self.yourTasks.append(taskItem)
                 }
             }
             
-            print("Successfully created task.")
+            print("Successfully created task, and fetched task.")
         } catch {
             print("Failed to create task")
         }
