@@ -107,6 +107,7 @@ struct FamilyDetailView: View {
                 ButtonComponent(title: "Add Task", image: nil, color: .red) {
                     self.isAddingTask = true
                 }
+                .padding()
             }
             .sheet(isPresented: $isAddingTask, content: {
                 AddTaskView(isAddingTask: $isAddingTask, family: extractedFamily)

@@ -44,10 +44,11 @@ struct ProgressIndicatorView: View {
                     }
                 } label: {
                     Text(constantProgressIndicators[ind].label)
-                        .fontWeight(.bold)
-                        .padding(10)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
                         .background(constantProgressIndicators[ind].color)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.black)
                         .cornerRadius(5)
                 }
             }
@@ -60,10 +61,11 @@ struct ProgressModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .fontWeight(.bold)
-            .padding(10)
+            .fontWeight(.semibold)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
             .background(bgColor)
-            .foregroundStyle(.white)
+            .foregroundStyle(.black)
             .cornerRadius(5)
     }
 }
@@ -84,7 +86,14 @@ struct IndividualProgressView: View {
                 .modifier(ProgressModifier(bgColor: .green))
         default:
             Text("Not Started")
-                .modifier(ProgressModifier(bgColor: .black))
+                .fontWeight(.medium)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(.black.opacity(0.15), lineWidth: 3)
+                )
+                .foregroundStyle(.black)
         }
     }
 }

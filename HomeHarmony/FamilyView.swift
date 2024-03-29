@@ -15,8 +15,10 @@ struct MockData: Identifiable {
 
 struct FamilyView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
+    
     @State private var search: String = ""
     @State private var isAddingFamily: Bool = false
+    @State private var size: CGFloat = .zero
     
     var body: some View {
         NavigationStack {
@@ -43,6 +45,7 @@ struct FamilyView: View {
                                         Spacer()
                                         
                                         Text(family.creator.firstName)
+                                            .fontWeight(.semibold)
                                             .padding(.horizontal, 10)
                                             .padding(.vertical, 5)
                                             .background(.red)
@@ -67,6 +70,7 @@ struct FamilyView: View {
             }
             .sheet(isPresented: $isAddingFamily, content: {
                 AddFamilyView(isAddingFamily: $isAddingFamily)
+                    .modifier(GetChildViewHeightModifier(size: $size))
             })
         }
     }

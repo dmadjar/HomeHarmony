@@ -14,7 +14,7 @@ struct AddFamilyView: View {
     @State private var members: Set<CustomUser> = []
     
     var body: some View {
-        VStack(spacing: 15) {
+        VStack(alignment: .leading, spacing: 15) {
             Text("Create Family")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -64,7 +64,7 @@ struct AddFamilyView: View {
                 }
             }
         }
-        .padding(.horizontal)
+        .padding()
     }
 }
 
