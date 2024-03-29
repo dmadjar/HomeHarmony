@@ -64,17 +64,28 @@ class AuthenticationViewModel: ObservableObject {
                 self.authenticationState = user == nil
                     ? .unauthenticated
                     : .authenticated
-                
             }
         }
     }
     
+    func fetchData() async {
+        setDataLoading()
+        
+        await getUser()
+        await getYourTasks()
+        await getFamilies()
+        await getFriends()
+        await getFriendRequests()
+    }
+    
     func reset() {
+        self.customUser = nil
         self.email = ""
         self.password = ""
         self.confirmPassword = ""
         self.friends = []
         self.friendRequests = []
+        self.requestsSent = []
         self.extendedFamilies = []
     }
     

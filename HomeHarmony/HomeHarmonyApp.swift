@@ -24,17 +24,13 @@ struct HomeHarmonyApp: App {
             case .authenticated:
                 MainView()
                     .environmentObject(viewModel)
-                    .onAppear {
-                        Task {
-                            viewModel.setDataLoading()
-                            
-                            await viewModel.getUser()
-                            await viewModel.getYourTasks()
-                            await viewModel.getFamilies()
-                            await viewModel.getFriends()
-                            await viewModel.getFriendRequests()
-                        }
-                    }
+            }
+        }
+        .onChange(of: viewModel.user) {
+            Task {
+                if viewModel.user != nil {
+                    await self.viewModel.fetchData()
+                }
             }
         }
     }

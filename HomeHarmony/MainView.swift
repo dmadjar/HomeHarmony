@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
+    @EnvironmentObject var viewModel: AuthenticationViewModel
+    
     var body: some View {
         TabView {
             TaskView()
