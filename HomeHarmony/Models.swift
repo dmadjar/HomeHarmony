@@ -15,13 +15,6 @@ public struct CustomUser: Codable, Identifiable, Hashable {
     // var requests: [String]?
 }
 
-public struct Family: Codable, Identifiable, Hashable {
-    @DocumentID public var id: String?
-    var familyName: String
-    var creator: String
-    var members: [String]
-}
-
 public struct TaskItem: Codable, Identifiable {
     @DocumentID public var id: String?
     var taskName: String
@@ -36,16 +29,16 @@ public struct TaskItem: Codable, Identifiable {
     }
 }
 
-public struct ExtractedFamily: Identifiable {
-    public var id: String?
-    var familyName: String
-    var creator: CustomUser
-    var members: [CustomUser]
-}
-
 public struct ExtendedTaskItem {
     var task: TaskItem
     var assigneeFirstName: String
+}
+
+public struct Family: Codable, Identifiable, Hashable {
+    @DocumentID public var id: String?
+    var familyName: String
+    var creator: String
+    var members: [String]
 }
 
 public struct ExtendedFamily: Identifiable {
@@ -55,3 +48,8 @@ public struct ExtendedFamily: Identifiable {
     var members: [CustomUser]
     var tasks: [ExtendedTaskItem]
 }
+
+
+
+
+
