@@ -61,11 +61,11 @@ struct ProgressModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .fontWeight(.semibold)
+            .fontWeight(.medium)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(bgColor)
-            .foregroundStyle(.black)
+            .foregroundStyle(.white)
             .cornerRadius(5)
     }
 }

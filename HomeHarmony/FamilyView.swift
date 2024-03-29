@@ -24,8 +24,8 @@ struct FamilyView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 15) {
-                    if viewModel.isLoading() {
-                        ForEach(0..<4) { _ in
+                    if viewModel.familiesLoading {
+                        ForEach(0..<5) { _ in
                             ShimmerView()
                                 .frame(height: 100)
                                 .cornerRadius(10)
@@ -35,49 +35,34 @@ struct FamilyView: View {
                             NavigationLink {
                                 FamilyDetailView(extendedFamily: family)
                             } label: {
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Text(family.familyName)
-                                            .font(.title3)
-                                            .fontWeight(.bold)
-                                            .foregroundStyle(.black)
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        HStack {
+                                            Text(family.familyName)
+                                                .font(.title3)
+                                                .fontWeight(.bold)
+                                                .foregroundStyle(.black)
 
-                                        Spacer()
+                                            Spacer()
 
-                                        Text(family.creator.firstName)
-                                            .fontWeight(.semibold)
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 5)
-                                            .background(.red)
-                                            .foregroundStyle(.white)
-                                            .cornerRadius(5)
+                                            Text(family.creator.firstName)
+                                                .fontWeight(.semibold)
+                                                .padding(.horizontal, 10)
+                                                .padding(.vertical, 5)
+                                                .background(.red)
+                                                .foregroundStyle(.white)
+                                                .cornerRadius(5)
+                                        }
+                                        
+                                        Text(numTasks(tasks: family.tasks))
                                     }
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .fontWeight(.semibold)
+                                        .foregroundStyle(.black.opacity(0.15))
                                 }
-                                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
+                                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.15)))
                             }
-//                            NavigationLink {
-//                                FamilyDetailView(extractedFamily: family)
-//                            } label: {
-//                                VStack(alignment: .leading) {
-//                                    HStack {
-//                                        Text(family.familyName)
-//                                            .font(.title3)
-//                                            .fontWeight(.bold)
-//                                            .foregroundStyle(.black)
-//                                        
-//                                        Spacer()
-//                                        
-//                                        Text(family.creator.firstName)
-//                                            .fontWeight(.semibold)
-//                                            .padding(.horizontal, 10)
-//                                            .padding(.vertical, 5)
-//                                            .background(.red)
-//                                            .foregroundStyle(.white)
-//                                            .cornerRadius(5)
-//                                    }
-//                                }
-//                                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
-//                            }
                         }
                     }
                 }
@@ -98,7 +83,17 @@ struct FamilyView: View {
         }
     }
     
-    var familyResults: [ExtendedFamily] {
+    private func numTasks(tasks: [ExtendedTaskItem]) -> String {
+        if (tasks.count == 0) {
+            return "No tasks to complete!"
+        } else if (tasks.count == 1) {
+            return "1 task to complete."
+        } else {
+            return "\(tasks.count) tasks to complete."
+        }
+    }
+    
+    private var familyResults: [ExtendedFamily] {
         if search.isEmpty {
             return viewModel.extendedFamilies
         } else {

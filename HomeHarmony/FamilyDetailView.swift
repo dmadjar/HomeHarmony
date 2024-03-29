@@ -14,11 +14,7 @@ struct ProgressTag: View {
     
     var body: some View {
         Text(name)
-            .fontWeight(.bold)
-            .foregroundStyle(.white)
-            .padding(10)
-            .background(progressColor())
-            .cornerRadius(5)
+            .modifier(ProgressModifier(bgColor: progressColor()))
     }
     
     private func progressColor() -> Color {
@@ -44,82 +40,89 @@ struct FamilyDetailView: View {
     let extendedFamily: ExtendedFamily
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 15) {
-                    Text("Tasks")
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
-                    ForEach(taskResults, id: \.task.id) { extendedTask in
-                        VStack(alignment: .leading) {
-                            HStack(alignment: .top) {
-                                Text(extendedTask.task.taskName)
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-                                
-                                Spacer()
-                                
-                                ProgressTag(
-                                    name: extendedTask.assigneeFirstName,
-                                    progress: extendedTask.task.progress
-                                )
-                            }
-                            
-                            Text(extendedTask.task.description)
-                        }
-                        .padding()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(.black, lineWidth: 3)
-                        )
-                    }
-                    
-                    Text("Members")
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
-                    ForEach(extendedFamily.members) { member in
-                        HStack(spacing: 5) {
-                            Text(member.firstName)
-                            
-                            Text(member.lastName)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 15) {
+                Text("Tasks")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                ForEach(taskResults, id: \.task.id) { extendedTask in
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(alignment: .top) {
+                            Text(extendedTask.task.taskName)
+                                .font(.title2)
+                                .fontWeight(.bold)
                             
                             Spacer()
                             
-                            if (member.id == extendedFamily.creator.id) {
-                                Text("Creator")
-                                    .foregroundStyle(.red)
-                            }
+                            IndividualProgressView(progress: extendedTask.task.progress)
                         }
-                        .padding()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(.black, lineWidth: 3)
-                        )
+                        
+                        Text(extendedTask.task.description)
+                            .fontWeight(.medium)
+                        
+                        HStack {
+                            Text(getDayOfWeek(finishBy: extendedTask.task.finishBy))
+                                .fontWeight(.medium)
+                                .foregroundStyle(.black)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(.black.opacity(0.15), lineWidth: 2)
+                                )
+                            
+                            Spacer()
+                            
+                            Text("Assigned to: \(extendedTask.assigneeFirstName)")
+                        }
                     }
+                    .padding(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.black.opacity(0.15), lineWidth: 2)
+                    )
                 }
-                .padding(.horizontal)
-            }
-            .navigationTitle(extendedFamily.familyName)
-            .searchable(text: $search)
-            .safeAreaInset(edge: .bottom) {
-                ButtonComponent(title: "Add Task", image: nil, color: .red) {
-                    self.isAddingTask = true
+                
+                Text("Members")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                ForEach(extendedFamily.members) { member in
+                    HStack(spacing: 5) {
+                        Text(member.firstName)
+                        
+                        Text(member.lastName)
+                        
+                        Spacer()
+                        
+                        if (member.id == extendedFamily.creator.id) {
+                            ProgressTag(
+                                name: "Creator",
+                                progress: 1
+                            )
+                        }
+                    }
+                    .padding()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.black.opacity(0.15), lineWidth: 2)
+                    )
                 }
-                .padding()
             }
-            .sheet(isPresented: $isAddingTask, content: {
-                AddTaskView(isAddingTask: $isAddingTask, family: extendedFamily)
-            })
+            .padding(.horizontal)
         }
-        .onAppear {
-            Task {
-                if let familyID = extendedFamily.id {
-                    await viewModel.getTasks(familyID: familyID)
-                }
+        .navigationTitle(extendedFamily.familyName)
+        .searchable(text: $search)
+        .safeAreaInset(edge: .bottom) {
+            ButtonComponent(title: "Add Task", image: nil, color: .red) {
+                self.isAddingTask = true
             }
+            .padding()
         }
+        .sheet(isPresented: $isAddingTask, content: {
+            AddTaskView(isAddingTask: $isAddingTask, family: extendedFamily)
+        })
     }
     
     private var taskResults: [ExtendedTaskItem] {
@@ -128,6 +131,13 @@ struct FamilyDetailView: View {
         } else {
             return extendedFamily.tasks.filter { $0.task.taskName.contains(search) }
         }
+    }
+    
+    private func getDayOfWeek(finishBy: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        let weekday = dateFormatter.string(from: finishBy)
+        return weekday
     }
 }
 

@@ -56,8 +56,6 @@ extension AuthenticationViewModel {
     func getFamilies() async {
         if let user = user {
             do {
-                self.familiesLoading = true
-                
                 let familySnapshot = try await db.collection("users").document(user.uid).collection("families").getDocuments()
                 
                 for familyDoc in familySnapshot.documents {

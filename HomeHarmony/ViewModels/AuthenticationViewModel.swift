@@ -42,13 +42,14 @@ class AuthenticationViewModel: ObservableObject {
     @Published var friendRequests: [CustomUser] = []
     @Published var friends: [CustomUser] = []
     
-    
-//    @Published var families: [ExtractedFamily] = []
     @Published var extendedFamilies: [ExtendedFamily] = []
+    
+    @Published var friendsLoading: Bool = false
+    @Published var tasksLoading: Bool = false
     @Published var familiesLoading: Bool = false
     
     @Published var yourTasks: [TaskItem] = []
-    @Published var tasks: [ExtendedTaskItem] = []
+    /*@Published var tasks: [ExtendedTaskItem] = []*/ // This can eventually be removed.
     
     private var authStateHandler: AuthStateDidChangeListenerHandle?
     
@@ -68,7 +69,6 @@ class AuthenticationViewModel: ObservableObject {
         }
     }
     
-    
     func reset() {
         self.email = ""
         self.password = ""
@@ -76,6 +76,12 @@ class AuthenticationViewModel: ObservableObject {
         self.friends = []
         self.friendRequests = []
         self.extendedFamilies = []
+    }
+    
+    func setDataLoading() {
+        self.friendsLoading = true
+        self.familiesLoading = true
+        self.tasksLoading = true
     }
 }
 
@@ -151,8 +157,6 @@ extension AuthenticationViewModel {
     
     func getUser() async {
         if let user = user {
-            self.familiesLoading = true
-            
             let docRef = db.collection("users").document(user.uid)
             
             do {
@@ -223,6 +227,7 @@ extension AuthenticationViewModel {
                     self.friendRequests.append(friend)
                 }
                 
+                self.friendsLoading = false
                 print("Successfully found friend requests.")
             } catch {
                 print("Could not find friend requests.")

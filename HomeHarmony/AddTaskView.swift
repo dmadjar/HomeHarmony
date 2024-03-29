@@ -68,6 +68,8 @@ struct AddTaskView: View {
                 Task {
                     await addTask()
                 }
+                
+                self.isAddingTask = false
             }
             .padding()
         }

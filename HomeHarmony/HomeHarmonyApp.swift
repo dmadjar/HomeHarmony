@@ -26,11 +26,13 @@ struct HomeHarmonyApp: App {
                     .environmentObject(viewModel)
                     .onAppear {
                         Task {
+                            viewModel.setDataLoading()
+                            
                             await viewModel.getUser()
                             await viewModel.getYourTasks()
                             await viewModel.getFamilies()
-                            await viewModel.getFriendRequests()
                             await viewModel.getFriends()
+                            await viewModel.getFriendRequests()
                         }
                     }
             }

@@ -25,7 +25,7 @@ struct ProfileView: View {
                     .padding()
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(.black.opacity(0.75), lineWidth: 3)
+                            .stroke(.black.opacity(0.15), lineWidth: 2)
                     )
                     
                     ButtonComponent(title: "Sign Out", image: nil, color: .red) {

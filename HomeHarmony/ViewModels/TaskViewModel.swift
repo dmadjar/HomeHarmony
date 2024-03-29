@@ -9,7 +9,7 @@ import Foundation
 
 extension AuthenticationViewModel {
     func createTask(familyID: String, taskName: String, description: String, assigneeID: String, assignee: CustomUser, finishBy: Date) async {
-        var task = TaskItem(
+        let task = TaskItem(
             taskName: taskName,
             description: description,
             assigneeID: assigneeID,
@@ -29,37 +29,22 @@ extension AuthenticationViewModel {
                 assigneeFirstName: assignee.firstName
             )
             
-            await getYourTasks()
+            for i in 0..<self.extendedFamilies.count {
+                if extendedFamilies[i].id == familyID {
+                    extendedFamilies[i].tasks.append(extendedTask)
+                    break
+                }
+            }
             
-            self.tasks.append(extendedTask)
+            if let user = user {
+                if assigneeID == user.uid {
+                    yourTasks.append(task)
+                }
+            }
+            
             print("Successfully created task.")
         } catch {
             print("Failed to create task")
-        }
-    }
-    
-    func getTasks(familyID: String) async {
-        do {
-            self.tasks.removeAll()
-            
-            let querySnapshot = try await db.collection("tasks").whereField("familyID", isEqualTo: familyID).getDocuments()
-            
-            for document in querySnapshot.documents {
-                let task = try document.data(as: TaskItem.self)
-                
-                let assignee = try await db.collection("users").document(task.assigneeID).getDocument(as: CustomUser.self)
-                
-                let extendedTask = ExtendedTaskItem(
-                    task: task,
-                    assigneeFirstName: assignee.firstName
-                )
-                
-                self.tasks.append(extendedTask)
-            }
-            
-            print("Retrieved family tasks.")
-        } catch {
-            print("Failed to retrieve tasks.")
         }
     }
     
@@ -75,6 +60,7 @@ extension AuthenticationViewModel {
                     self.yourTasks.append(task)
                 }
                 
+                self.tasksLoading = false
                 print("Successfully found your tasks.")
             }
         } catch {

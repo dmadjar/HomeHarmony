@@ -17,64 +17,75 @@ struct FriendsView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 15) {
-                    VStack(alignment: .leading, spacing: 15) {
-                        ForEach(friendResults) { friend in
-                            HStack(spacing: 5) {
-                                Text(friend.firstName)
-                                
-                                Text(friend.lastName)
-                                
-                                Spacer()
-                            }
-                            .padding()
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.black, lineWidth: 3)
-                            )
+                    if viewModel.friendsLoading {
+                        ForEach(0..<5) { _ in
+                            ShimmerView()
+                                .frame(height: 100)
+                                .cornerRadius(10)
                         }
-                    }
-                    
-                    if !viewModel.friendRequests.isEmpty {
-                        Text("Requests")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        
-                        ForEach(viewModel.friendRequests) { request in
-                            HStack(spacing: 5) {
-                                Text(request.firstName)
-                                
-                                Text(request.lastName)
-                                
-                                Spacer()
-                                
-                        
-                                Button {
-                                    Task {
-                                        await viewModel.declineRequest(requestId: request.id)
-                                    }
-                                } label: {
-                                    Image(systemName: "x.circle.fill")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundStyle(.red)
+                    } else {
+                        VStack(alignment: .leading, spacing: 15) {
+                            ForEach(friendResults) { friend in
+                                HStack(spacing: 5) {
+                                    Text(friend.firstName)
+                                    
+                                    Text(friend.lastName)
+                                    
+                                    Spacer()
                                 }
-                                
-                                Button {
-                                    Task {
-                                        await viewModel.acceptRequest(requestId: request.id)
-                                    }
-                                } label: {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundStyle(.green)
-                                }
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.black)
+                                .padding()
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(.black.opacity(0.15), lineWidth: 2)
+                                )
                             }
-                            .padding()
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.black, lineWidth: 3)
-                            )
+                        }
+                        
+                        if !viewModel.friendRequests.isEmpty {
+                            Text("Requests")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                            
+                            ForEach(viewModel.friendRequests) { request in
+                                HStack(spacing: 5) {
+                                    Text(request.firstName)
+                                    
+                                    Text(request.lastName)
+                                    
+                                    Spacer()
+                                    
+                            
+                                    Button {
+                                        Task {
+                                            await viewModel.declineRequest(requestId: request.id)
+                                        }
+                                    } label: {
+                                        Image(systemName: "x.circle.fill")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .foregroundStyle(.red)
+                                    }
+                                    
+                                    Button {
+                                        Task {
+                                            await viewModel.acceptRequest(requestId: request.id)
+                                        }
+                                    } label: {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .foregroundStyle(.green)
+                                    }
+                                }
+                                .padding()
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(.black, lineWidth: 2)
+                                )
+                            }
                         }
                     }
                 }

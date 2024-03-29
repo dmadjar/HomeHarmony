@@ -31,7 +31,7 @@ struct TextModifier: ViewModifier {
             .padding()
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(color, lineWidth: 3)
+                    .stroke(color, lineWidth: 2)
             )
     }
 }
