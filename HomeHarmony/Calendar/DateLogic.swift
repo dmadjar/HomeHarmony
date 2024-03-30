@@ -43,6 +43,11 @@ extension Date {
         return dayInPreviousMonth.startOfMonth
     }
     
+    var startOfNextMonth: Date {
+        let daysInNextMonth = Calendar.current.date(byAdding: .month, value: 1, to: self)!
+        return daysInNextMonth.startOfMonth
+    }
+    
     var numberOfDaysInMonth: Int {
         Calendar.current.component(.day, from: endOfMonth)
     }
@@ -74,5 +79,11 @@ extension Date {
     
     var startOfDay: Date {
         Calendar.current.startOfDay(for: self)
+    }
+    
+    var getMonth: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "LLLL YYYY"
+        return dateFormatter.string(from: self)
     }
 }
