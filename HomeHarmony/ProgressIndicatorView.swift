@@ -17,6 +17,8 @@ struct ProgressIndicator: Identifiable {
 struct ProgressIndicatorView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     
+    @State private var isShowingPopover = false
+    
     let constantProgressIndicators: [ProgressIndicator] = [
         ProgressIndicator(label: "Started", color: .red, index: 1),
         ProgressIndicator(label: "In Progress", color: .yellow, index: 2),
@@ -30,7 +32,7 @@ struct ProgressIndicatorView: View {
     let taskID: String?
    
     var body: some View {
-        HStack {
+        Menu("Progress") {
             ForEach(taskCurrentProgress..<constantProgressIndicators.count, id: \.self) { ind in
                 Button {
                     if let taskID = taskID {
@@ -55,6 +57,18 @@ struct ProgressIndicatorView: View {
                 }
             }
         }
+        .fontWeight(.medium)
+        .foregroundStyle(.white)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(.black)
+        .cornerRadius(10)
+    }
+}
+
+struct ProgressIndicator_Previews: PreviewProvider {
+    static var previews: some View {
+        ProgressIndicatorView(taskCurrentProgress: 0, familyID: "", taskID: "")
     }
 }
 

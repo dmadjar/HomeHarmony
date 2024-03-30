@@ -38,18 +38,20 @@ struct TaskView: View {
                                 Text(task.description)
                                     .fontWeight(.medium)
                                 
-                                Text(getDayOfWeek(finishBy: task.finishBy))
-                                    .fontWeight(.medium)
-                                    .foregroundStyle(.black)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 5)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(.black.opacity(0.15), lineWidth: 2)
-                                    )
-                                
-                                if task.progress != 3 {
-                                    ProgressIndicatorView(taskCurrentProgress: task.progress, familyID: task.familyID, taskID: task.id)
+                                HStack {
+                                    Text(getDayOfWeek(finishBy: task.finishBy))
+                                        .fontWeight(.medium)
+                                        .foregroundStyle(.black)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 5)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(.black.opacity(0.15), lineWidth: 2)
+                                        )
+                                    
+                                    if task.progress != 3 {
+                                        ProgressIndicatorView(taskCurrentProgress: task.progress, familyID: task.familyID, taskID: task.id)
+                                    }
                                 }
                             }
                             .padding(10)
