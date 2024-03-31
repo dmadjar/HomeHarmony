@@ -14,20 +14,22 @@ struct ProgressTag: View {
     
     var body: some View {
         Text(name)
-            .modifier(ProgressModifier(bgColor: progressColor()))
+            .modifier(ProgressModifier(bgColor: progressColor(progress: progress)))
     }
     
-    private func progressColor() -> Color {
-        switch progress {
-        case 1:
-            return .red
-        case 2:
-            return .yellow
-        case 3:
-            return .green
-        default:
-            return .black
-        }
+    
+}
+
+func progressColor(progress: Int) -> Color {
+    switch progress {
+    case 1:
+        return .red
+    case 2:
+        return .yellow
+    case 3:
+        return .green
+    default:
+        return .black
     }
 }
 
@@ -84,7 +86,7 @@ struct FamilyDetailView: View {
                     )
                 }
                 
-                CalendarView()
+                CalendarView(dayToTask: dayToTask)
                 
                 Text("Members")
                     .font(.title)
@@ -140,6 +142,21 @@ struct FamilyDetailView: View {
         dateFormatter.dateFormat = "EEEE"
         let weekday = dateFormatter.string(from: finishBy)
         return weekday
+    }
+    
+    var dayToTask: [DateComponents : [Int]] {
+        var dictionary = [DateComponents : [Int]]()
+        for taskItem in extendedFamily.tasks {
+            let components = Calendar.current.dateComponents([.year, .month, .day], from: taskItem.task.finishBy)
+            if dictionary[components] != nil {
+                dictionary[components]!.append(taskItem.task.progress)
+            } else {
+                dictionary[components] = [taskItem.task.progress]
+            }
+            
+        }
+        print(dictionary)
+        return dictionary
     }
 }
 

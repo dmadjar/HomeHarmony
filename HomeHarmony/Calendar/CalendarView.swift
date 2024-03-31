@@ -14,6 +14,8 @@ struct CalendarView: View {
     @State private var date: Date = Date.now
     @State private var days = [Date]()
     
+    let dayToTask: [DateComponents : [Int]]
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Schedule")
@@ -72,20 +74,23 @@ struct CalendarView: View {
                             Text("\(day.formatted(.dateTime.day()))")
                                 .foregroundStyle(.secondary)
                             
-                            if Date.now.startOfDay == day.startOfDay {
-                                HStack(spacing: -2) {
+                            HStack(spacing: 2) {
+                                if dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] == nil {
                                     Circle()
-                                        .frame(width: 7, height: 7)
-                                        .foregroundStyle(.red)
-                                    
-                                    Circle()
-                                        .frame(width: 7, height: 7)
-                                        .foregroundStyle(.orange)
+                                        .frame(width: 5, height: 5)
+                                        .foregroundStyle(.clear)
+                                } else {
+                                    ForEach(Array(dayToTask.keys), id: \.self) { key in
+                                        ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
+                                            
+                                            if Calendar.current.date(from: key)!.startOfDay == day {
+                                                Circle()
+                                                    .frame(width: 5, height: 5)
+                                                    .foregroundStyle(progressColor(progress: progress))
+                                            }
+                                        }
+                                    }
                                 }
-                            } else {
-                                Circle()
-                                    .frame(width: 5, height: 5)
-                                    .foregroundStyle(.clear)
                             }
                         }
                         .padding(.vertical, 10)
@@ -118,6 +123,6 @@ struct CalendarView: View {
 
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView()
+        CalendarView(dayToTask: [DateComponents:[Int]]())
     }
 }
