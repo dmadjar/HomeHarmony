@@ -84,6 +84,8 @@ struct FamilyDetailView: View {
                     )
                 }
                 
+                CalendarView()
+                
                 Text("Members")
                     .font(.title)
                     .fontWeight(.bold)

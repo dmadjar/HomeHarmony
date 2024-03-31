@@ -8,17 +8,21 @@
 import SwiftUI
 
 struct CalendarView: View {
-   
-    @State private var date: Date = Date.now
-    
     let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
+    
+    @State private var date: Date = Date.now
     @State private var days = [Date]()
-   
-    let color: Color
     
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Schedule")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Spacer()
+                .frame(height: 5)
+            
             HStack {
                 Button {
                     self.date = date.startOfPreviousMonth
@@ -34,7 +38,7 @@ struct CalendarView: View {
                 Spacer()
                 
                 Text(date.getMonth)
-                    .font(.title)
+                    .font(.title3)
                     .fontWeight(.bold)
                 
                 Spacer()
@@ -66,13 +70,26 @@ struct CalendarView: View {
                     } else {
                         VStack {
                             Text("\(day.formatted(.dateTime.day()))")
+                                .foregroundStyle(.secondary)
                             
-                            Circle()
-                                .frame(width: 5, height: 5)
+                            if Date.now.startOfDay == day.startOfDay {
+                                HStack(spacing: -2) {
+                                    Circle()
+                                        .frame(width: 7, height: 7)
+                                        .foregroundStyle(.red)
+                                    
+                                    Circle()
+                                        .frame(width: 7, height: 7)
+                                        .foregroundStyle(.orange)
+                                }
+                            } else {
+                                Circle()
+                                    .frame(width: 5, height: 5)
+                                    .foregroundStyle(.clear)
+                            }
                         }
                         .padding(.vertical, 10)
                         .fontWeight(.bold)
-                        .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, minHeight: 40)
                         .background(
                             RoundedRectangle(cornerRadius: 5)
@@ -89,7 +106,6 @@ struct CalendarView: View {
                 }
             }
         }
-        .padding()
         .onAppear {
             self.days = date.calendarDisplayDays
         }
@@ -102,6 +118,6 @@ struct CalendarView: View {
 
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView(color: .blue)
+        CalendarView()
     }
 }
