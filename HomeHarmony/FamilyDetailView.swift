@@ -180,25 +180,63 @@ struct FamilyDetailView: View {
 }
 
 struct CalendarDataView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     let day: Date
     
     let tasks: [ExtendedTaskItem]
     
     var body: some View {
-        VStack {
-            Text("Date Tasks")
-                .font(.title)
-                .fontWeight(.bold)
+        VStack(alignment: .leading) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Tasks Due By")
+                        .font(.title3)
+                        .fontWeight(.medium)
+                    
+                    Text(day.getMonthDayYear)
+                        .font(.title)
+                        .fontWeight(.bold)
+                }
+                
+                Spacer()
+                
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "x.circle.fill")
+                        .font(.title)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.black)
+                }
+            }
             
             ScrollView {
                 VStack(spacing: 15) {
                     ForEach(selectedTasks, id: \.task.id) { task in
-                        Text(task.task.taskName)
+                        VStack {
+                            HStack {
+                                Text(task.task.taskName)
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                
+                                Spacer()
+                                
+                                Text(task.assigneeFirstName)
+                                    .font(.title3)
+                                    .fontWeight(.medium)
+                            }
+                            .foregroundStyle(.white)
+                        }
+                        .padding()
+                        .background(progressColor(progress: task.task.progress))
+                        .cornerRadius(10)
                     }
                 }
             }
             .frame(height: 250)
         }
+        .padding()
     }
     
     var selectedTasks: [ExtendedTaskItem] {

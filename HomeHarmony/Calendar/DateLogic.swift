@@ -86,4 +86,10 @@ extension Date {
         dateFormatter.dateFormat = "LLLL YYYY"
         return dateFormatter.string(from: self)
     }
+    
+    var getMonthDayYear: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd LLLL YYYY"
+        return dateFormatter.string(from: self)
+    }
 }
