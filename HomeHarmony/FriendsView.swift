@@ -57,7 +57,6 @@ struct FriendsView: View {
                                     
                                     Spacer()
                                     
-                            
                                     Button {
                                         Task {
                                             await viewModel.declineRequest(requestId: request.id)

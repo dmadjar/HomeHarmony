@@ -16,8 +16,6 @@ struct ProgressTag: View {
         Text(name)
             .modifier(ProgressModifier(bgColor: progressColor(progress: progress)))
     }
-    
-    
 }
 
 func progressColor(progress: Int) -> Color {
@@ -38,6 +36,8 @@ struct FamilyDetailView: View {
     
     @State private var isAddingTask: Bool = false
     @State private var search: String = ""
+    @State private var isPopupOpen: Bool = false
+    @State private var dateSelected: Date? = nil
     
     let extendedFamily: ExtendedFamily
     
@@ -86,7 +86,7 @@ struct FamilyDetailView: View {
                     )
                 }
                 
-                CalendarView(dayToTask: dayToTask)
+                CalendarView(isPopupOpen: $isPopupOpen, dateSelected: $dateSelected, dayToTask: dayToTask)
                 
                 Text("Members")
                     .font(.title)
@@ -119,10 +119,20 @@ struct FamilyDetailView: View {
         .navigationTitle(extendedFamily.familyName)
         .searchable(text: $search)
         .safeAreaInset(edge: .bottom) {
-            ButtonComponent(title: "Add Task", image: nil, color: .red) {
-                self.isAddingTask = true
+            ZStack {
+                if let dateSelected = dateSelected {
+                    if isPopupOpen {
+                        PopupView(title: "Task Details", isPopupOpen: $isPopupOpen) {
+                            CalendarDataView(day: dateSelected, tasks: extendedFamily.tasks)
+                        }
+                    }
+                }
+                
+                ButtonComponent(title: "Add Task", image: nil, color: .red) {
+                    self.isAddingTask = true
+                }
+                .padding()
             }
-            .padding()
         }
         .sheet(isPresented: $isAddingTask, content: {
             AddTaskView(isAddingTask: $isAddingTask, family: extendedFamily)
@@ -155,11 +165,27 @@ struct FamilyDetailView: View {
             }
             
         }
-        print(dictionary)
         return dictionary
     }
 }
 
-//#Preview {
-//    TaskView()
-//}
+struct CalendarDataView: View {
+    let day: Date
+    
+    let tasks: [ExtendedTaskItem]
+    
+    var body: some View {
+        ScrollView {
+            ForEach(selectedTasks, id: \.task.id) { task in
+                Text(task.task.taskName)
+            }
+        }
+        .frame(height: 250)
+    }
+    
+    var selectedTasks: [ExtendedTaskItem] {
+        return tasks.filter {
+            return $0.task.finishBy.startOfDay == day
+        }
+    }
+}

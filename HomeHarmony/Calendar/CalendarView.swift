@@ -11,6 +11,9 @@ struct CalendarView: View {
     let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
+    @Binding var isPopupOpen: Bool
+    @Binding var dateSelected: Date?
+    
     @State private var date: Date = Date.now
     @State private var days = [Date]()
     
@@ -70,23 +73,28 @@ struct CalendarView: View {
                     if day.monthInt != date.monthInt {
                         Text("")
                     } else {
-                        VStack {
-                            Text("\(day.formatted(.dateTime.day()))")
-                                .foregroundStyle(.secondary)
-                            
-                            HStack(spacing: 2) {
-                                if dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] == nil {
-                                    Circle()
-                                        .frame(width: 5, height: 5)
-                                        .foregroundStyle(.clear)
-                                } else {
-                                    ForEach(Array(dayToTask.keys), id: \.self) { key in
-                                        ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
-                                            
-                                            if Calendar.current.date(from: key)!.startOfDay == day {
-                                                Circle()
-                                                    .frame(width: 5, height: 5)
-                                                    .foregroundStyle(progressColor(progress: progress))
+                        Button {
+                            self.dateSelected = day
+                            self.isPopupOpen = true
+                        } label: {
+                            VStack {
+                                Text("\(day.formatted(.dateTime.day()))")
+                                    .foregroundStyle(.black.opacity(0.75))
+                                
+                                HStack(spacing: 2) {
+                                    if dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] == nil {
+                                        Circle()
+                                            .frame(width: 5, height: 5)
+                                            .foregroundStyle(.clear)
+                                    } else {
+                                        ForEach(Array(dayToTask.keys), id: \.self) { key in
+                                            ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
+                                                
+                                                if Calendar.current.date(from: key)!.startOfDay == day {
+                                                    Circle()
+                                                        .frame(width: 5, height: 5)
+                                                        .foregroundStyle(progressColor(progress: progress))
+                                                }
                                             }
                                         }
                                     }
@@ -120,9 +128,8 @@ struct CalendarView: View {
     }
 }
 
-
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView(dayToTask: [DateComponents:[Int]]())
+        CalendarView(isPopupOpen: .constant(false), dateSelected: .constant(nil), dayToTask: [DateComponents:[Int]]())
     }
 }

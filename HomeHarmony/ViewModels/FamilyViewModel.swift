@@ -29,8 +29,6 @@ extension AuthenticationViewModel {
             do {
                 let familyId = try db.collection("families").addDocument(from: family)
                 
-                
-                
                 for id in member_ids {
                     let userFamilies = db.collection("users").document(id).collection("families").document(familyId.documentID)
                     try await userFamilies.setData([:])
