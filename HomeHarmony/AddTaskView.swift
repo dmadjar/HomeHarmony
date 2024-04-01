@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct AddTaskView: View {
+    
     @EnvironmentObject var viewModel: AuthenticationViewModel
-
-    @Binding var isAddingTask: Bool
+    @Environment(\.dismiss) private var dismiss
     
     @State private var taskName: String = ""
     @State private var description: String = ""
@@ -67,9 +67,8 @@ struct AddTaskView: View {
             ButtonComponent(title: "Done!", image: nil, color: .red) {
                 Task {
                     await addTask()
+                    dismiss()
                 }
-                
-                self.isAddingTask = false
             }
             .padding()
         }

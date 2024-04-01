@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct PopupView<Content: View>: View {
-    let title: String
+    @Environment(\.dismiss) private var dismiss
     
-    @Binding var isPopupOpen: Bool
+    let title: String
     
     @ViewBuilder let content: Content
     
@@ -29,7 +29,7 @@ struct PopupView<Content: View>: View {
                     Spacer()
                     
                     Button {
-                        self.isPopupOpen = false
+                        dismiss()
                     } label: {
                         Image(systemName: "x.circle.fill")
                             .font(.title)
@@ -50,7 +50,7 @@ struct PopupView<Content: View>: View {
 
 struct PopupView_Previews: PreviewProvider {
     static var previews: some View {
-        PopupView(title: "Title", isPopupOpen: .constant(true), content: {
+        PopupView(title: "Title", content: {
             
         })
     }

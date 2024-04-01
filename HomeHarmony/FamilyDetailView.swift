@@ -31,13 +31,21 @@ func progressColor(progress: Int) -> Color {
     }
 }
 
+enum ActiveSheet: String, Identifiable {
+    case addTask, showCalendarDetail
+    var id: String {
+        return self.rawValue
+    }
+}
+
 struct FamilyDetailView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
-    
-    @State private var isAddingTask: Bool = false
+
+    @State private var size: CGFloat = .zero
     @State private var search: String = ""
-    @State private var isPopupOpen: Bool = false
     @State private var dateSelected: Date? = nil
+    @State private var sheetOpen: Bool = false
+    @State private var activeSheet: ActiveSheet? = nil
     
     let extendedFamily: ExtendedFamily
     
@@ -86,7 +94,7 @@ struct FamilyDetailView: View {
                     )
                 }
                 
-                CalendarView(isPopupOpen: $isPopupOpen, dateSelected: $dateSelected, dayToTask: dayToTask)
+                CalendarView(sheetOpen: $sheetOpen, showCalendarDetail: $activeSheet, dateSelected: $dateSelected, dayToTask: dayToTask)
                 
                 Text("Members")
                     .font(.title)
@@ -119,24 +127,26 @@ struct FamilyDetailView: View {
         .navigationTitle(extendedFamily.familyName)
         .searchable(text: $search)
         .safeAreaInset(edge: .bottom) {
-            ZStack {
+            ButtonComponent(title: "Add Task", image: nil, color: .red) {
+                self.activeSheet = .addTask
+                self.sheetOpen = true
+            }
+            .padding()
+        }
+        .sheet(isPresented: $sheetOpen, onDismiss: { activeSheet = nil }) { [activeSheet] in
+            switch activeSheet {
+            case .addTask:
+                AddTaskView(family: extendedFamily)
+                    .modifier(GetChildViewHeightModifier(size: $size))
+            case .showCalendarDetail:
                 if let dateSelected = dateSelected {
-                    if isPopupOpen {
-                        PopupView(title: "Task Details", isPopupOpen: $isPopupOpen) {
-                            CalendarDataView(day: dateSelected, tasks: extendedFamily.tasks)
-                        }
-                    }
+                    CalendarDataView(day: dateSelected, tasks: extendedFamily.tasks)
+                        .modifier(GetChildViewHeightModifier(size: $size))
                 }
-                
-                ButtonComponent(title: "Add Task", image: nil, color: .red) {
-                    self.isAddingTask = true
-                }
-                .padding()
+            case nil:
+                EmptyView()
             }
         }
-        .sheet(isPresented: $isAddingTask, content: {
-            AddTaskView(isAddingTask: $isAddingTask, family: extendedFamily)
-        })
     }
     
     private var taskResults: [ExtendedTaskItem] {
@@ -175,12 +185,20 @@ struct CalendarDataView: View {
     let tasks: [ExtendedTaskItem]
     
     var body: some View {
-        ScrollView {
-            ForEach(selectedTasks, id: \.task.id) { task in
-                Text(task.task.taskName)
+        VStack {
+            Text("Date Tasks")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            ScrollView {
+                VStack(spacing: 15) {
+                    ForEach(selectedTasks, id: \.task.id) { task in
+                        Text(task.task.taskName)
+                    }
+                }
             }
+            .frame(height: 250)
         }
-        .frame(height: 250)
     }
     
     var selectedTasks: [ExtendedTaskItem] {

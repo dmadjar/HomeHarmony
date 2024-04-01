@@ -11,7 +11,8 @@ struct CalendarView: View {
     let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
-    @Binding var isPopupOpen: Bool
+    @Binding var sheetOpen: Bool
+    @Binding var showCalendarDetail: ActiveSheet?
     @Binding var dateSelected: Date?
     
     @State private var date: Date = Date.now
@@ -75,31 +76,10 @@ struct CalendarView: View {
                     } else {
                         Button {
                             self.dateSelected = day
-                            self.isPopupOpen = true
+                            self.showCalendarDetail = .showCalendarDetail
+                            self.sheetOpen = true
                         } label: {
-                            VStack {
-                                Text("\(day.formatted(.dateTime.day()))")
-                                    .foregroundStyle(.black.opacity(0.75))
-                                
-                                HStack(spacing: 2) {
-                                    if dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] == nil {
-                                        Circle()
-                                            .frame(width: 5, height: 5)
-                                            .foregroundStyle(.clear)
-                                    } else {
-                                        ForEach(Array(dayToTask.keys), id: \.self) { key in
-                                            ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
-                                                
-                                                if Calendar.current.date(from: key)!.startOfDay == day {
-                                                    Circle()
-                                                        .frame(width: 5, height: 5)
-                                                        .foregroundStyle(progressColor(progress: progress))
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            CalendarButtonView(dayToTask: dayToTask, day: day)
                         }
                         .padding(.vertical, 10)
                         .fontWeight(.bold)
@@ -128,8 +108,40 @@ struct CalendarView: View {
     }
 }
 
+struct CalendarButtonView: View {
+    let dayToTask: [DateComponents : [Int]]
+    let day: Date
+    
+    var body: some View {
+        VStack {
+            Text("\(day.formatted(.dateTime.day()))")
+                .foregroundStyle(.black.opacity(0.75))
+            
+            HStack(spacing: 2) {
+                if dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] == nil {
+                    Circle()
+                        .frame(width: 5, height: 5)
+                        .foregroundStyle(.clear)
+                } else {
+                    ForEach(Array(dayToTask.keys), id: \.self) { key in
+                        ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
+                            
+                            if Calendar.current.date(from: key)!.startOfDay == day {
+                                Circle()
+                                    .frame(width: 5, height: 5)
+                                    .foregroundStyle(progressColor(progress: progress))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView(isPopupOpen: .constant(false), dateSelected: .constant(nil), dayToTask: [DateComponents:[Int]]())
+        CalendarView(sheetOpen: .constant(false), showCalendarDetail: .constant(nil), dateSelected: .constant(nil), dayToTask: [DateComponents:[Int]]())
     }
 }
