@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import FirebaseCore
+import FirebaseFirestore
 
 extension AuthenticationViewModel {
     func createTask(familyID: String, taskName: String, description: String, assigneeID: String, assignee: CustomUser, finishBy: Date) async {
@@ -53,8 +55,6 @@ extension AuthenticationViewModel {
     func getYourTasks() async {
         do {
             if let user = user {
-                self.yourTasks.removeAll()
-                
                 let querySnapshot = try await db.collection("tasks").whereField("assigneeID", isEqualTo: user.uid).getDocuments()
                 
                 for document in querySnapshot.documents {

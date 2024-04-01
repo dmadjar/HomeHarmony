@@ -97,7 +97,6 @@ struct FriendsView: View {
             ButtonComponent(title: "Add Friend", image: nil, color: .red) {
                 Task {
                     await viewModel.getAllUsersNotFriends()
-                    
                     self.isAddingFriend = true
                 }
             }

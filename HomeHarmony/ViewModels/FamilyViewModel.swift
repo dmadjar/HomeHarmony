@@ -92,6 +92,7 @@ extension AuthenticationViewModel {
                         tasks: tasks
                     )
                     
+                    print("HERE")
                     self.extendedFamilies.append(extendedFamily)
                 }
                 
@@ -101,9 +102,5 @@ extension AuthenticationViewModel {
                 print("Failed to retrieve family.")
             }
         }
-    }
-    
-    func isLoading() -> Bool {
-        return self.familiesLoading
     }
 }

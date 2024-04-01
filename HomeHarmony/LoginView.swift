@@ -7,35 +7,6 @@
 
 import SwiftUI
 
-struct ButtonModifier: ViewModifier {
-    let bgColor: Color
-    let textColor: Color
-    
-    func body(content: Content) -> some View {
-        content
-            .frame(maxWidth: .infinity)
-            .foregroundStyle(textColor)
-            .padding()
-            .background(bgColor)
-            .cornerRadius(10)
-    }
-}
-
-struct TextModifier: ViewModifier {
-    let cornerRadius: CGFloat
-    let color: Color
-    
-    func body(content: Content) -> some View {
-        content
-            .frame(maxWidth: .infinity)
-            .padding()
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(color, lineWidth: 2)
-            )
-    }
-}
-
 struct LoginView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     @State private var isCreatingAccount: Bool = false
