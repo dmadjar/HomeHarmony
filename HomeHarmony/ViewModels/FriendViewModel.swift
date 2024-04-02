@@ -55,37 +55,48 @@ extension AuthenticationViewModel {
         }
     }
     
-    func getFriendRequests() async {
+    func getFriendRequests() async -> [CustomUser]? {
         if let user = user {
             do {
                 let requests = try await db.collection("users").document(user.uid).collection("requests").getDocuments()
                 
+                var localFriendRequests = [CustomUser]()
+                
                 for request in requests.documents {
                     let friend = try await db.collection("users").document(request.documentID).getDocument(as: CustomUser.self)
-                    self.friendRequests.append(friend)
+                    localFriendRequests.append(friend)
                 }
                 
                 self.friendsLoading = false
                 print("Successfully found friend requests.")
+                return localFriendRequests
             } catch {
                 print("Could not find friend requests.")
             }
         }
+        
+        return nil
     }
     
-    func getFriends() async {
+    func getFriends() async -> [CustomUser]? {
         if let user = user {
             do {
                 let userFriends = try await db.collection("users").document(user.uid).collection("friends").getDocuments()
                 
+                var localFriends = [CustomUser]()
                 for friend in userFriends.documents {
                     let f = try await db.collection("users").document(friend.documentID).getDocument(as: CustomUser.self)
-                    self.friends.append(f)
+                    localFriends.append(f)
                 }
+                
+                print("Sucessfully found friends")
+                return localFriends
             } catch {
                 print("Could not get friends.")
             }
         }
+        
+        return nil
     }
     
     func acceptRequest(requestId: String?) async {

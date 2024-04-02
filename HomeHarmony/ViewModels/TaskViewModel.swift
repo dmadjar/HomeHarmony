@@ -52,22 +52,27 @@ extension AuthenticationViewModel {
         }
     }
     
-    func getYourTasks() async {
+    func getYourTasks() async -> [TaskItem]? {
         do {
             if let user = user {
                 let querySnapshot = try await db.collection("tasks").whereField("assigneeID", isEqualTo: user.uid).getDocuments()
                 
+                var tasks = [TaskItem]()
+                
                 for document in querySnapshot.documents {
                     let task = try document.data(as: TaskItem.self)
-                    self.yourTasks.append(task)
+                    tasks.append(task)
                 }
                 
                 self.tasksLoading = false
                 print("Successfully found your tasks.")
+                return tasks
             }
         } catch {
             print("Failed to retrieve your tasks.")
         }
+        
+        return nil
     }
     
     func updateTaskProgress(taskID: String, familyID: String, progress: Int) async {

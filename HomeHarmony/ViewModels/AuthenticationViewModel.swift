@@ -70,11 +70,17 @@ class AuthenticationViewModel: ObservableObject {
     func fetchData() async {
         setDataLoading()
         
-        await getUser()
-        await getYourTasks()
-        await getFamilies()
-        await getFriends()
-        await getFriendRequests()
+        async let custUser = getUser()
+        async let families = getFamilies()
+        async let tasks = getYourTasks()
+        async let friRequests = getFriendRequests()
+        async let fri = getFriends()
+        
+        self.customUser = await custUser
+        self.yourTasks = await tasks ?? []
+        self.friendRequests = await friRequests ?? []
+        self.friends = await fri ?? []
+        self.extendedFamilies = await families ?? []
     }
     
     func reset() {
@@ -168,18 +174,18 @@ extension AuthenticationViewModel {
         }
     }
     
-    func getUser() async {
+    func getUser() async -> CustomUser? {
         if let user = user {
             let docRef = db.collection("users").document(user.uid)
-            
             do {
-                self.customUser = try await docRef.getDocument(as: CustomUser.self)
+                let custUser = try await docRef.getDocument(as: CustomUser.self)
                 print("Succesfully found User.")
+                return custUser
             } catch {
                 print("Error decoding user: \(error.localizedDescription)")
             }
-        } else {
-            print("Could not find user id.")
         }
+        
+        return nil
     }
 }

@@ -53,9 +53,11 @@ extension AuthenticationViewModel {
         }
     }
     
-    func getFamilies() async {
+    func getFamilies() async -> [ExtendedFamily]? {
         if let user = user {
             do {
+                var extendFamily = [ExtendedFamily]()
+                
                 let familySnapshot = try await db.collection("users").document(user.uid).collection("families").getDocuments()
                 
                 for familyDoc in familySnapshot.documents {
@@ -92,15 +94,18 @@ extension AuthenticationViewModel {
                         tasks: tasks
                     )
                     
-                    print("HERE")
-                    self.extendedFamilies.append(extendedFamily)
+                    extendFamily.append(extendedFamily)
                 }
                 
+               
                 self.familiesLoading = false
                 print("Successfully retrieved families.")
+                return extendFamily
             } catch {
                 print("Failed to retrieve family.")
             }
         }
+        
+        return nil
     }
 }
