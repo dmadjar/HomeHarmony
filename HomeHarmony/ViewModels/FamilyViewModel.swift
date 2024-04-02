@@ -55,41 +55,18 @@ extension AuthenticationViewModel {
         }
         
         do {
-            var localExtendedFamily = [ExtendedFamily]()
-            
             let familySnapshot = try await db.collection("users").document(user.uid).collection("families").getDocuments()
             
-            for familyDoc in familySnapshot.documents { // I think I could use TaskGroup to get these concurrently.
-                let familyRef = db.collection("families").document(familyDoc.documentID)
-        
-                let family = try await familyRef.getDocument(as: Family.self)
-                let creator = try await db.collection("users").document(family.creator).getDocument(as: CustomUser.self)
-                
-                var members = [CustomUser]()
-                let memberSnapshot = try await familyRef.collection("members").getDocuments()
-                for memberId in memberSnapshot.documents {
-                    let member = try await db.collection("users").document(memberId.documentID).getDocument(as: CustomUser.self)
-                    members.append(member)
+            let localExtendedFamily = try await withThrowingTaskGroup(of: ExtendedFamily.self, returning: [ExtendedFamily].self) { taskGroup in
+                for familyDoc in familySnapshot.documents {
+                    taskGroup.addTask { try await self.createExtendedFamily(familyDoc: familyDoc) }
                 }
                 
-                var tasks = [ExtendedTaskItem]()
-                let taskSnapshot = try await familyRef.collection("tasks").getDocuments()
-                for taskId in taskSnapshot.documents {
-                    let task = try await db.collection("tasks").document(taskId.documentID).getDocument(as: TaskItem.self)
-                    let assignee = try await db.collection("users").document(task.assigneeID).getDocument(as: CustomUser.self)
-                    let extendedTaskItem = ExtendedTaskItem(task: task, assigneeFirstName: assignee.firstName)
-                    tasks.append(extendedTaskItem)
+                var localExtendedFamily = [ExtendedFamily]()
+                for try await result in taskGroup {
+                    localExtendedFamily.append(result)
                 }
-                
-                let extendedFamily = ExtendedFamily(
-                    id: family.id,
-                    familyName: family.familyName,
-                    creator: creator,
-                    members: members,
-                    tasks: tasks
-                )
-                
-                localExtendedFamily.append(extendedFamily)
+                return localExtendedFamily
             }
             
             self.familiesLoading = false
@@ -101,58 +78,36 @@ extension AuthenticationViewModel {
         }
     }
     
-//    func getFamilies() async -> [ExtendedFamily]? {
-//        if let user = user {
-//            do {
-//                var extendFamily = [ExtendedFamily]()
-//                
-//                let familySnapshot = try await db.collection("users").document(user.uid).collection("families").getDocuments()
-//                
-//                for familyDoc in familySnapshot.documents {
-//                    let family = try await db.collection("families").document(familyDoc.documentID).getDocument(as: Family.self)
-//                    let creator = try await db.collection("users").document(family.creator).getDocument(as: CustomUser.self)
-//                    
-//                    var members = [CustomUser]()
-//                    for userId in family.members {
-//                        let m = try await db.collection("users").document(userId).getDocument(as: CustomUser.self)
-//                        members.append(m)
-//                    }
-//                    
-//                    var tasks = [ExtendedTaskItem]()
-//                    let taskSnapshot = try await db.collection("families").document(familyDoc.documentID).collection("tasks").getDocuments()
-//                    for taskDoc in taskSnapshot.documents {
-//                        let task = try await db.collection("tasks").document(taskDoc.documentID).getDocument(as: TaskItem.self)
-//                        
-//                        let assignee = try await db.collection("users").document(task.assigneeID).getDocument(as: CustomUser.self)
-//                        
-//                        let extendedTaskItem = ExtendedTaskItem(
-//                            task: task,
-//                            assigneeFirstName: assignee.firstName
-//                        )
-//                        
-//                        tasks.append(extendedTaskItem)
-//                    }
-//                    
-//                    let extendedFamily = ExtendedFamily(
-//                        id: family.id,
-//                        familyName: family.familyName,
-//                        creator: creator,
-//                        members: members,
-//                        tasks: tasks
-//                    )
-//                    
-//                    extendFamily.append(extendedFamily)
-//                }
-//                
-//               
-//                self.familiesLoading = false
-//                print("Successfully retrieved families.")
-//                return extendFamily
-//            } catch {
-//                print("Failed to retrieve family.")
-//            }
-//        }
-//        
-//        return nil
-//    }
+    func createExtendedFamily(familyDoc: QueryDocumentSnapshot) async throws -> ExtendedFamily {
+        let familyRef = db.collection("families").document(familyDoc.documentID)
+
+        let family = try await familyRef.getDocument(as: Family.self)
+        let creator = try await db.collection("users").document(family.creator).getDocument(as: CustomUser.self)
+        
+        var members = [CustomUser]()
+        let memberSnapshot = try await familyRef.collection("members").getDocuments()
+        for memberId in memberSnapshot.documents {
+            let member = try await db.collection("users").document(memberId.documentID).getDocument(as: CustomUser.self)
+            members.append(member)
+        }
+        
+        var tasks = [ExtendedTaskItem]()
+        let taskSnapshot = try await familyRef.collection("tasks").getDocuments()
+        for taskId in taskSnapshot.documents {
+            let task = try await db.collection("tasks").document(taskId.documentID).getDocument(as: TaskItem.self)
+            let assignee = try await db.collection("users").document(task.assigneeID).getDocument(as: CustomUser.self)
+            let extendedTaskItem = ExtendedTaskItem(task: task, assigneeFirstName: assignee.firstName)
+            tasks.append(extendedTaskItem)
+        }
+        
+        let extendedFamily = ExtendedFamily(
+            id: family.id,
+            familyName: family.familyName,
+            creator: creator,
+            members: members,
+            tasks: tasks
+        )
+        
+        return extendedFamily
+    }
 }
