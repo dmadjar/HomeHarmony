@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AddTaskView: View {
-    
     @EnvironmentObject var viewModel: AuthenticationViewModel
     @Environment(\.dismiss) private var dismiss
     
@@ -20,58 +19,54 @@ struct AddTaskView: View {
     let family: ExtendedFamily
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 30) {
-                Text("Create Task")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                TextField("Name", text: $taskName)
-                    .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
-                
-                TextField("Description", text: $description)
-                    .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
-                
-                HStack {
-                    Menu("Assign Member To Task") {
-                        ForEach(family.members) { member in
-                            Button {
-                                self.assignee = member
-                            } label: {
-                                Text("\(member.firstName) \(member.lastName)")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                            }
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    if let assignee = assignee {
-                        HStack {
-                            Text(assignee.firstName)
-                            
-                            Text(assignee.lastName)
+        VStack(alignment: .leading, spacing: 30) {
+            Text("Create Task")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            TextField("Name", text: $taskName)
+                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
+            
+            TextField("Description", text: $description)
+                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
+            
+            HStack {
+                Menu("Assign Member To Task") {
+                    ForEach(family.members) { member in
+                        Button {
+                            self.assignee = member
+                        } label: {
+                            Text("\(member.firstName) \(member.lastName)")
+                                .font(.title2)
+                                .fontWeight(.bold)
                         }
                     }
                 }
-                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
                 
-                DatePicker("Finish by:", selection: $finishBy)
-                                .datePickerStyle(GraphicalDatePickerStyle())
-                                .frame(maxHeight: 400)
+                Spacer()
+                
+                if let assignee = assignee {
+                    HStack {
+                        Text(assignee.firstName)
+                        
+                        Text(assignee.lastName)
+                    }
+                }
             }
-            .padding()
-        }
-        .safeAreaInset(edge: .bottom) {
+            .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
+            
+            DatePicker("Finish by:", selection: $finishBy)
+                            .datePickerStyle(GraphicalDatePickerStyle())
+                            .frame(maxHeight: 400)
+            
             ButtonComponent(title: "Done!", image: nil, color: .red) {
                 Task {
                     await addTask()
                     dismiss()
                 }
             }
-            .padding()
         }
+        .padding()
     }
     
     private func addTask() async {

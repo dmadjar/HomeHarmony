@@ -71,7 +71,7 @@ class AuthenticationViewModel: ObservableObject {
         setDataLoading()
         
         async let custUser = getUser()
-        async let families = getFamilies()
+        async let families = getFam()
         async let tasks = getYourTasks()
         async let friRequests = getFriendRequests()
         async let fri = getFriends()

@@ -38,7 +38,7 @@ public struct Family: Codable, Identifiable, Hashable {
     @DocumentID public var id: String?
     var familyName: String
     var creator: String
-    var members: [String]
+//    var members: [String]
 }
 
 public struct ExtendedFamily: Identifiable {

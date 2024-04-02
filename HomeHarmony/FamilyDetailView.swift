@@ -40,8 +40,9 @@ enum ActiveSheet: String, Identifiable {
 
 struct FamilyDetailView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
-
+    
     @State private var size: CGFloat = .zero
+    
     @State private var search: String = ""
     @State private var dateSelected: Date? = nil
     @State private var sheetOpen: Bool = false
@@ -136,8 +137,10 @@ struct FamilyDetailView: View {
         .sheet(isPresented: $sheetOpen, onDismiss: { activeSheet = nil }) { [activeSheet] in
             switch activeSheet {
             case .addTask:
-                AddTaskView(family: extendedFamily)
-                    .modifier(GetChildViewHeightModifier(size: $size))
+                ScrollView {
+                    AddTaskView(family: extendedFamily)
+                        .modifier(GetChildViewHeightModifier(size: $size))
+                }
             case .showCalendarDetail:
                 if let dateSelected = dateSelected {
                     CalendarDataView(day: dateSelected, tasks: extendedFamily.tasks)
