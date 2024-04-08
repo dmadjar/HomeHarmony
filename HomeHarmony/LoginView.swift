@@ -13,6 +13,16 @@ struct LoginView: View {
     
     var body: some View {
         ZStack {
+            VStack {
+                CheckmarkView(isReversed: false)
+                
+                Spacer()
+                
+                CheckmarkView(isReversed: true)
+            }
+            .frame(width: UIScreen.main.bounds.width)
+            .ignoresSafeArea()
+            
             if viewModel.authenticationState == .authenticating {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .black))
@@ -20,58 +30,74 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity)
             }
             
-            VStack(spacing: 45) {
-                Spacer()
-                
-                if !viewModel.errorMessage.isEmpty {
-                   VStack {
-                     Text("Email or Password is incorrect.")
-                           .padding()
-                           .background(.red)
-                           .foregroundStyle(.white)
-                           .cornerRadius(10)
-                       
-                   }
-                 }
-                
+            VStack(spacing: 60) {
                 Text("HomeHarmony")
-                    .font(.largeTitle)
-                    .fontWeight(.black)
+                    .font(.custom("Sansita-ExtraBold", size: 42))
                 
-                TextField("Email", text: $viewModel.email)
-                    .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.25)))
-                
-                SecureField("Password", text: $viewModel.password)
-                    .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.25)))
-                    
-                ButtonComponent(title: "Login", image: nil, color: .red) {
-                    signInWithEmailPassword()
-                }
-                
-                Spacer()
-                
-                VStack(spacing: 15) {
-                    HStack {
-                        Rectangle()
-                            .frame(height: 2)
+                Group {
+                    VStack {
+                        HStack {
+                            Image(systemName: "person.fill")
+                                .font(.system(size: 20))
+                            
+                            TextField("Email", text: $viewModel.email)
+                                .font(.custom("Sansita-Bold", size: 20))
+                        }
                         
-                        Text("Don't have an account?")
-                            .layoutPriority(1)
-                        
-                        Rectangle()
+                        RoundedRectangle(cornerRadius: 10)
                             .frame(height: 2)
                     }
-                    .opacity(0.5)
                     
-                    ButtonComponent(title: "Create Account", image: nil, color: .black.opacity(0.75)) {
-                        self.isCreatingAccount = true
+                    VStack {
+                        HStack {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 20))
+                            
+                            SecureField("Password", text: $viewModel.password)
+                                .font(.custom("Sansita-Bold", size: 20))
+                        }
+                        
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(height: 2)
                     }
+                    
+                    VStack(spacing: 20) {
+                        Button {
+                            signInWithEmailPassword()
+                        } label: {
+                            Text("Login")
+                                .frame(maxWidth: .infinity)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 15)
+                                .font(.custom("Sansita-Bold", size: 20))
+                                .foregroundStyle(.white)
+                                .background(Color("slate"))
+                                .cornerRadius(10)
+                                .shadow(color: .black.opacity(0.10), radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 0, y: 5)
+                        }
+                        
+                        HStack {
+                            Text("Don't have an account?")
+                            
+                            Button {
+                                self.isCreatingAccount = true
+                            } label: {
+                                Text("Register")
+                                    .underline()
+                            }
+                        }
+                        .font(.custom("Sansita-Regular", size: 15))
+                        .foregroundStyle(Color("slate").opacity(0.5))
+                    }
+                   
                 }
+                .foregroundStyle(Color("slate").opacity(0.5))
+                .padding(.horizontal, 60)
                 
                 Spacer()
+                    .frame(height: 20)
             }
         }
-        .padding(24.5)
         .sheet(isPresented: $isCreatingAccount, content: {
             CreateAccount()
         })

@@ -70,18 +70,39 @@ class AuthenticationViewModel: ObservableObject {
     func fetchData() async {
         setDataLoading()
         
-        async let custUser = getUser()
-        async let families = getFam()
-        async let tasks = getYourTasks()
-        async let friRequests = getFriendRequests()
-        async let fri = getFriends()
+        let clock = ContinuousClock()
+        let result = await clock.measure {
+            async let custUser = getUser()
+            async let families = getFam()
+            async let tasks = getYourTasks()
+            async let friRequests = getFriendRequests()
+            async let fri = getFriends()
+            
+            self.customUser = await custUser
+            self.yourTasks = await tasks ?? []
+            self.friendRequests = await friRequests ?? []
+            self.friends = await fri ?? []
+            self.extendedFamilies = await families ?? []
+        }
         
-        self.customUser = await custUser
-        self.yourTasks = await tasks ?? []
-        self.friendRequests = await friRequests ?? []
-        self.friends = await fri ?? []
-        self.extendedFamilies = await families ?? []
+        print(result)
     }
+    
+//    func fetchData() async {
+//        setDataLoading()
+//        
+//        let clock = ContinuousClock()
+//        
+//        let result = await clock.measure {
+//            self.customUser = await getUser()
+//            self.yourTasks = await getYourTasks() ?? []
+//            self.friendRequests = await getFriendRequests() ?? []
+//            self.friends = await getFriends() ?? []
+//            self.extendedFamilies = await getFam() ?? []
+//        }
+//        
+//        print(result)
+//    }
     
     func reset() {
         self.email = ""
