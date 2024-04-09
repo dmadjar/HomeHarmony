@@ -128,7 +128,7 @@ struct FamilyDetailView: View {
         .navigationTitle(extendedFamily.familyName)
         .searchable(text: $search)
         .safeAreaInset(edge: .bottom) {
-            ButtonComponent(title: "Add Task", image: nil, color: .red) {
+            ButtonComponent(title: "Add Task", image: nil) {
                 self.activeSheet = .addTask
                 self.sheetOpen = true
             }

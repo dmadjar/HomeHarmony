@@ -61,7 +61,7 @@ struct AddFriendView: View {
         }
         .searchable(text: $search)
         .safeAreaInset(edge: .bottom) {
-            ButtonComponent(title: "Done", image: nil, color: .red) {
+            ButtonComponent(title: "Done", image: nil) {
                 self.isAddingFriend = false
             }
             .padding()

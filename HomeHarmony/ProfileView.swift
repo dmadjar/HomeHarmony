@@ -28,11 +28,11 @@ struct ProfileView: View {
                             .stroke(.black.opacity(0.15), lineWidth: 2)
                     )
                     
-                    ButtonComponent(title: "Sign Out", image: nil, color: .red) {
+                    ButtonComponent(title: "Sign Out", image: nil) {
                         signOut()
                     }
                     
-                    ButtonComponent(title: "Delete Account", image: nil, color: .red) {
+                    ButtonComponent(title: "Delete Account", image: nil) {
                         deleteAccount()
                     }
                 }

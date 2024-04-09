@@ -35,43 +35,23 @@ struct FamilyView: View {
                             NavigationLink {
                                 FamilyDetailView(extendedFamily: family)
                             } label: {
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        HStack {
-                                            Text(family.familyName)
-                                                .font(.title3)
-                                                .fontWeight(.bold)
-                                                .foregroundStyle(.black)
-
-                                            Spacer()
-
-                                            Text(family.creator.firstName)
-                                                .fontWeight(.semibold)
-                                                .padding(.horizontal, 10)
-                                                .padding(.vertical, 5)
-                                                .background(.red)
-                                                .foregroundStyle(.white)
-                                                .cornerRadius(5)
-                                        }
-                                        
-                                        Text(numTasks(tasks: family.tasks))
-                                    }
-                                    
-                                    Image(systemName: "chevron.right")
-                                        .fontWeight(.semibold)
-                                        .foregroundStyle(.black.opacity(0.15))
-                                }
-                                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.15)))
+                                FamilyComponent(extendedFamily: family)
                             }
                         }
                     }
                 }
                 .padding(.horizontal)
             }
-            .navigationTitle("Families")
-            .searchable(text: $search)
+            .background(Color("lightGray"))
+            .safeAreaInset(edge: .top) {
+                NavBarComponent(
+                    search: $search,
+                    title: "Families",
+                    content: {}
+                )
+            }
             .safeAreaInset(edge: .bottom) {
-                ButtonComponent(title: "Add Family", image: nil, color: .red) {
+                ButtonComponent(title: "Create Family", image: "plus") {
                     self.isAddingFamily = true
                 }
                 .padding()
@@ -80,16 +60,6 @@ struct FamilyView: View {
                 AddFamilyView(isAddingFamily: $isAddingFamily)
                     .modifier(GetChildViewHeightModifier(size: $size))
             })
-        }
-    }
-    
-    private func numTasks(tasks: [ExtendedTaskItem]) -> String {
-        if (tasks.count == 0) {
-            return "No tasks to complete!"
-        } else if (tasks.count == 1) {
-            return "1 task to complete."
-        } else {
-            return "\(tasks.count) tasks to complete."
         }
     }
     

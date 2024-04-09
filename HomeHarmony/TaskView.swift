@@ -17,7 +17,7 @@ struct TaskView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 15) {
                     if viewModel.tasksLoading {
                         ForEach(0..<5) { _ in
                             ShimmerView()
@@ -31,25 +31,26 @@ struct TaskView: View {
                     }
                 }
                 .padding(.horizontal)
-                .safeAreaInset(edge: .top) {
-                    NavBarComponent(
-                        search: $search,
-                        title: "Your Tasks") {
-                            Menu {
-                                Button("Compact View") {
-                                    self.isCompactView = true
-                                }
-                                
-                                Button("Card View") {
-                                    self.isCompactView = false
-                                }
-                            } label: {
-                                Image(systemName: "line.3.horizontal")
-                                    .font(.system(size: 28))
-                                    .bold()
-                                    .foregroundStyle(Color("slate"))
+            }
+            .background(Color("lightGray"))
+            .safeAreaInset(edge: .top) {
+                NavBarComponent(
+                    search: $search,
+                    title: "Your Tasks") {
+                        Menu {
+                            Button("Compact View") {
+                                self.isCompactView = true
                             }
-                    }
+                            
+                            Button("Card View") {
+                                self.isCompactView = false
+                            }
+                        } label: {
+                            Image(systemName: "line.3.horizontal")
+                                .font(.system(size: 28))
+                                .bold()
+                                .foregroundStyle(Color("slate"))
+                        }
                 }
             }
         }

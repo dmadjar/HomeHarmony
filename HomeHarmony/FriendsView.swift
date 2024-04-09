@@ -94,7 +94,7 @@ struct FriendsView: View {
             .searchable(text: $search)
         }
         .safeAreaInset(edge: .bottom) {
-            ButtonComponent(title: "Add Friend", image: nil, color: .red) {
+            ButtonComponent(title: "Add Friend", image: nil) {
                 Task {
                     await viewModel.getAllUsersNotFriends()
                     self.isAddingFriend = true

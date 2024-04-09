@@ -34,7 +34,7 @@ struct AddFamilyView: View {
                         }
                     }
                 }
-                .buttonStyle(ButtonComponentStyle(image: nil, color: .red))
+                .buttonStyle(ButtonComponentStyle(image: nil))
             }
             
             ScrollView(.horizontal) {
@@ -57,7 +57,7 @@ struct AddFamilyView: View {
                 }
             }
             
-            ButtonComponent(title: "Done", image: nil, color: .red) {
+            ButtonComponent(title: "Done", image: nil) {
                 Task {
                     if let customUser = viewModel.customUser {
                         members.insert(customUser)

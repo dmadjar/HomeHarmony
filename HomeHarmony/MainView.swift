@@ -10,11 +10,20 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.backgroundColor = UIColor(.white)
+        appearance.shadowColor = .none
+        appearance.shadowImage = nil
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
     var body: some View {
         TabView {
             TaskView()
                 .tabItem {
-                    Label("Tasks", systemImage: "list.bullet.rectangle")
+                    Label("Tasks", systemImage: "checkmark.rectangle.stack")
                 }
             
             FamilyView()
@@ -32,17 +41,7 @@ struct MainView: View {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
         }
-        .tint(.black)
-        .onAppear {
-            for family: String in UIFont.familyNames
-                    {
-                        print(family)
-                        for names: String in UIFont.fontNames(forFamilyName: family)
-                        {
-                            print("== \(names)")
-                        }
-                    }
-        }
+        .tint(Color("slate"))
     }
 }
 
