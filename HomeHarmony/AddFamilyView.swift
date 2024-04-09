@@ -14,47 +14,72 @@ struct AddFamilyView: View {
     @State private var members: Set<CustomUser> = []
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
+        VStack(alignment: .leading, spacing: 30) {
             Text("Create Family")
-                .font(.largeTitle)
-                .fontWeight(.bold)
+                .font(.custom("Sansita-ExtraBold", size: 36))
             
-            TextField("Family Name", text: $familyName)
-                .modifier(TextModifier(cornerRadius: 10, color: .black.opacity(0.75)))
-            
-            HStack {
-                Menu("Add Members") {
-                    ForEach(viewModel.friends) { friend in
-                        Button {
-                            members.insert(friend)
-                        } label: {
-                            Text("\(friend.firstName) \(friend.lastName)")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                        }
-                    }
-                }
-                .buttonStyle(ButtonComponentStyle(image: nil))
-            }
-            
-            ScrollView(.horizontal) {
+            VStack(spacing: 10) {
                 HStack {
-                    ForEach(Array(members)) { member in
-                        Button {
-                            self.members.remove(member)
-                        } label: {
-                            HStack {
-                                Text(member.firstName)
-                                
-                                Image(systemName: "xmark.circle.fill")
+                    Image(systemName: "person.2.fill")
+                    
+                    TextField("", text: $familyName,
+                              prompt: Text("Family Name")
+                        .font(.custom("Sansita-Regular", size: 20))
+                        .foregroundStyle(Color("slate").opacity(0.5))
+                    )
+                }
+                
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(height: 2)
+            }
+            .foregroundStyle(Color("slate").opacity(0.5))
+            
+            if !viewModel.friends.isEmpty {
+                HStack {
+                    Text("Add Members")
+                        .font(.custom("Sansita-ExtraBold", size: 28))
+                    
+                    Spacer()
+                }
+                
+                ScrollView {
+                    ForEach(viewModel.friends) { friend in
+                        HStack {
+                            Text("\(friend.firstName) \(friend.lastName)")
+                            
+                            Spacer()
+                            
+                            Button {
+                                if members.contains(friend) {
+                                    members.remove(friend)
+                                } else {
+                                    members.insert(friend)
+                                }
+                            } label: {
+                                if members.contains(friend) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(Color("lightGreen"))
+                                } else {
+                                    Image(systemName: "circle")
+                                        .foregroundStyle(Color("slate").opacity(0.5))
+                                }
                             }
-                            .foregroundStyle(.white)
-                            .padding()
-                            .background(.red)
-                            .cornerRadius(10)
                         }
+                        .font(.custom("Sansita-ExtraBold", size: 20))
+                        .padding(15)
+                        .background(
+                            LinearGradient(
+                                colors: [Color("lightOrange"), Color("darkOrange")],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .cornerRadius(10)
+                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
                     }
                 }
+                .frame(height: 150)
+                .cornerRadius(10)
             }
             
             ButtonComponent(title: "Done", image: nil) {
@@ -71,6 +96,11 @@ struct AddFamilyView: View {
     }
 }
 
-#Preview {
-    AddFamilyView(isAddingFamily: .constant(true))
+struct AddFamilyView_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static var previews: some View {
+        AddFamilyView(isAddingFamily: .constant(true))
+            .environmentObject(viewModel)
+    }
 }

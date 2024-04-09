@@ -8,26 +8,42 @@
 import SwiftUI
 
 
-struct ProgressTag: View {
-    let name: String
-    let progress: Int
-    
-    var body: some View {
-        Text(name)
-            .modifier(ProgressModifier(bgColor: progressColor(progress: progress)))
-    }
-}
+//struct ProgressTag: View {
+//    let name: String
+//    let progress: Int
+//    
+//    var body: some View {
+//        Text(name)
+//            .modifier(ProgressModifier(bgColor: progressColor(progress: progress)))
+//    }
+//}
 
-func progressColor(progress: Int) -> Color {
+func progressColor(progress: Int) -> LinearGradient {
     switch progress {
+    case 0:
+        return LinearGradient(
+            colors: [Color("lightPink"), Color("darkPink")],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     case 1:
-        return .red
+        return LinearGradient(
+            colors: [Color("lightOrange"), Color("darkOrange")],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     case 2:
-        return .yellow
-    case 3:
-        return .green
+        return LinearGradient(
+            colors: [Color("lightGreen"), Color("darkGreen")],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     default:
-        return .black
+        return LinearGradient(
+            colors: [.black],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     }
 }
 
@@ -50,85 +66,68 @@ struct FamilyDetailView: View {
     
     let extendedFamily: ExtendedFamily
     
+    init(extendedFamily: ExtendedFamily) {
+        self.extendedFamily = extendedFamily
+        
+        let attributes = [
+            NSAttributedString.Key.font:
+                UIFont(name: "Sansita-Regular", size: 17) as Any
+        ]
+        
+        let navBarAppearance = UINavigationBarAppearance()
+        
+        let backAppearance = UIBarButtonItemAppearance()
+        backAppearance.normal.titleTextAttributes = attributes
+        backAppearance.highlighted.titleTextAttributes = attributes
+        
+        navBarAppearance.shadowImage = nil
+        navBarAppearance.shadowColor = .none
+        navBarAppearance.backgroundColor = .white
+        navBarAppearance.buttonAppearance = backAppearance
+        
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+    }
+    
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 15) {
-                Text("Tasks")
-                    .font(.title)
-                    .fontWeight(.bold)
-                
-                ForEach(taskResults, id: \.task.id) { extendedTask in
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack(alignment: .top) {
-                            Text(extendedTask.task.taskName)
-                                .font(.title2)
-                                .fontWeight(.bold)
-                            
-                            Spacer()
-                            
-                            IndividualProgressView(progress: extendedTask.task.progress)
-                        }
-                        
-                        Text(extendedTask.task.description)
-                            .fontWeight(.medium)
-                        
-                        HStack {
-                            Text(getDayOfWeek(finishBy: extendedTask.task.finishBy))
-                                .fontWeight(.medium)
-                                .foregroundStyle(.black)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(.black.opacity(0.15), lineWidth: 2)
-                                )
-                            
-                            Spacer()
-                            
-                            Text("Assigned to: \(extendedTask.assigneeFirstName)")
+            VStack(alignment: .leading, spacing: 30) {
+                if !isEmpty() {
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Tasks")
+                            .font(.custom("Sansita-ExtraBold", size: 32))
+                                  
+                        ForEach(taskResults, id: \.task.id) { extendedTask in
+                            FamilyTaskComponent(extendedTask: extendedTask)
                         }
                     }
-                    .padding(10)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.black.opacity(0.15), lineWidth: 2)
-                    )
                 }
                 
                 CalendarView(sheetOpen: $sheetOpen, showCalendarDetail: $activeSheet, dateSelected: $dateSelected, dayToTask: dayToTask)
                 
-                Text("Members")
-                    .font(.title)
-                    .fontWeight(.bold)
-                
-                ForEach(extendedFamily.members) { member in
-                    HStack(spacing: 5) {
-                        Text(member.firstName)
-                        
-                        Text(member.lastName)
-                        
-                        Spacer()
-                        
-                        if (member.id == extendedFamily.creator.id) {
-                            ProgressTag(
-                                name: "Creator",
-                                progress: 1
-                            )
-                        }
+                VStack(alignment: .leading, spacing: 15) {
+                    Text("Members")
+                        .font(.custom("Sansita-ExtraBold", size: 32))
+                    
+                    ForEach(extendedFamily.members) { member in
+                        MemberComponent(
+                            member: member,
+                            creatorId: extendedFamily.creator.id
+                        )
                     }
-                    .padding()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(.black.opacity(0.15), lineWidth: 2)
-                    )
                 }
             }
             .padding(.horizontal)
         }
-        .navigationTitle(extendedFamily.familyName)
-        .searchable(text: $search)
+        .safeAreaInset(edge: .top) {
+            NavBarComponent(
+                search: $search,
+                title: extendedFamily.familyName,
+                content: {}
+            )
+        }
         .safeAreaInset(edge: .bottom) {
-            ButtonComponent(title: "Add Task", image: nil) {
+            ButtonComponent(title: "Add Task", image: "plus") {
                 self.activeSheet = .addTask
                 self.sheetOpen = true
             }
@@ -158,6 +157,10 @@ struct FamilyDetailView: View {
         } else {
             return extendedFamily.tasks.filter { $0.task.taskName.contains(search) }
         }
+    }
+    
+    private func isEmpty() -> Bool {
+        return taskResults.isEmpty
     }
     
     private func getDayOfWeek(finishBy: Date) -> String {
@@ -194,12 +197,10 @@ struct CalendarDataView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Tasks Due By")
-                        .font(.title3)
-                        .fontWeight(.medium)
+                        .font(.custom("Sansita-Bold", size: 20))
                     
                     Text(day.getMonthDayYear)
-                        .font(.title)
-                        .fontWeight(.bold)
+                        .font(.custom("Sansita-ExtraBold", size: 36))
                 }
                 
                 Spacer()
@@ -208,11 +209,10 @@ struct CalendarDataView: View {
                     dismiss()
                 } label: {
                     Image(systemName: "x.circle.fill")
-                        .font(.title)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.black)
+                        .font(.custom("Sansita-ExtraBold", size: 36))
                 }
             }
+            .foregroundStyle(Color("slate"))
             
             ScrollView {
                 VStack(spacing: 15) {
@@ -220,16 +220,14 @@ struct CalendarDataView: View {
                         VStack {
                             HStack {
                                 Text(task.task.taskName)
-                                    .font(.title3)
-                                    .fontWeight(.bold)
+                                    .font(.custom("Sansita-Bold", size: 20))
                                 
                                 Spacer()
                                 
                                 Text(task.assigneeFirstName)
-                                    .font(.title3)
-                                    .fontWeight(.medium)
+                                    .font(.custom("Sansita-Bold", size: 20))
                             }
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
                         }
                         .padding()
                         .background(progressColor(progress: task.task.progress))

@@ -1,5 +1,5 @@
 //
-//  TaskCardView.swift
+//  FamilyTaskComponent.swift
 //  HomeHarmony
 //
 //  Created by Daniel Madjar on 4/8/24.
@@ -7,25 +7,22 @@
 
 import SwiftUI
 
-struct TaskCardComponent: View {
-    
-    let isCompactView: Bool
-    let taskItem: TaskItem
+struct FamilyTaskComponent: View {
+    let extendedTask: ExtendedTaskItem
     
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
-                Text(taskItem.taskName)
+                Text(extendedTask.task.taskName)
                     .font(.custom("Sansita-ExtraBold", size: 20))
                 
                 Spacer()
                 
                 HStack {
-                    if isCompactView {
-                        ProgressCompactComponent(taskItem: taskItem)
-                    }
-                    
-                    Text(getDayOfWeek(finishBy: taskItem.finishBy))
+                    ProgressCompactComponent(taskItem: extendedTask.task)
+                        .disabled(true)
+            
+                    Text(getDayOfWeek(finishBy: extendedTask.task.finishBy))
                 }
                 .font(.custom("Sansita-Bold", size: 15))
                 .padding(.vertical, 5)
@@ -34,16 +31,11 @@ struct TaskCardComponent: View {
                 .cornerRadius(5)
             }
             
-            if !isCompactView {
-                Text(taskItem.description)
-                    .font(.custom("Sansita-Bold", size: 15))
-                
-                HStack {
-                    Spacer()
-                    
-                    ProgressComponent(taskItem: taskItem)
-                }
-            }
+            Text(extendedTask.task.description)
+                .font(.custom("Sansita-Bold", size: 15))
+            
+            Text("Assigned to: \(extendedTask.assigneeFirstName)")
+                .font(.custom("Sansita-Bold", size: 15))
         }
         .padding(15)
         .background(
@@ -55,8 +47,6 @@ struct TaskCardComponent: View {
         )
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-        .transition(.move(edge: .bottom))
-        .animation(.easeInOut, value: isCompactView)
     }
     
     private func getDayOfWeek(finishBy: Date) -> String {
@@ -68,5 +58,5 @@ struct TaskCardComponent: View {
 }
 
 //#Preview {
-//    TaskCardComponent(isCompactView: true)
+//    FamilyTaskComponent()
 //}

@@ -32,7 +32,6 @@ struct TaskView: View {
                 }
                 .padding(.horizontal)
             }
-            .background(Color("lightGray"))
             .safeAreaInset(edge: .top) {
                 NavBarComponent(
                     search: $search,

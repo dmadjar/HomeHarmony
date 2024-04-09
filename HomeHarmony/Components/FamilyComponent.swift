@@ -39,7 +39,13 @@ struct FamilyComponent: View {
                 .bold()
         }
         .padding(15)
-        .background(Color("lightPink"))
+        .background(
+            LinearGradient(
+                colors: [Color("lightOrange"), Color("darkOrange")],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }

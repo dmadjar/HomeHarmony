@@ -42,7 +42,6 @@ struct FamilyView: View {
                 }
                 .padding(.horizontal)
             }
-            .background(Color("lightGray"))
             .safeAreaInset(edge: .top) {
                 NavBarComponent(
                     search: $search,

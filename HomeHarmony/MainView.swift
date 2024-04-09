@@ -10,14 +10,14 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     
-    init() {
-        let appearance = UITabBarAppearance()
-        appearance.backgroundColor = UIColor(.white)
-        appearance.shadowColor = .none
-        appearance.shadowImage = nil
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-    }
+//    init() {
+//        let appearance = UITabBarAppearance()
+//        appearance.backgroundColor = UIColor(.white)
+//        appearance.shadowColor = .none
+//        appearance.shadowImage = nil
+//        UITabBar.appearance().standardAppearance = appearance
+//        UITabBar.appearance().scrollEdgeAppearance = appearance
+//    }
     
     var body: some View {
         TabView {
