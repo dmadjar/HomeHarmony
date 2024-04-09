@@ -10,6 +10,8 @@ import SwiftUI
 struct TaskView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     
+    @State private var isCompactView: Bool = false
+    
     @State private var search: String = ""
     
     var body: some View {
@@ -24,48 +26,32 @@ struct TaskView: View {
                         }
                     } else {
                         ForEach(taskResults) { task in
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack(alignment: .top) {
-                                    Text(task.taskName)
-                                        .font(.title2)
-                                        .fontWeight(.bold)
-                                    
-                                    Spacer()
-                                    
-                                    IndividualProgressView(progress: task.progress)
-                                }
-                                
-                                Text(task.description)
-                                    .fontWeight(.medium)
-                                
-                                HStack {
-                                    Text(getDayOfWeek(finishBy: task.finishBy))
-                                        .fontWeight(.medium)
-                                        .foregroundStyle(.black)
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 5)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(.black.opacity(0.15), lineWidth: 2)
-                                        )
-                                    
-                                    if task.progress != 3 {
-                                        ProgressIndicatorView(taskCurrentProgress: task.progress, familyID: task.familyID, taskID: task.id)
-                                    }
-                                }
-                            }
-                            .padding(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.black.opacity(0.15), lineWidth: 2)
-                            )
+                            TaskCardComponent(isCompactView: isCompactView, taskItem: task)
                         }
                     }
                 }
                 .padding(.horizontal)
+                .safeAreaInset(edge: .top) {
+                    NavBarComponent(
+                        search: $search,
+                        title: "Your Tasks") {
+                            Menu {
+                                Button("Compact View") {
+                                    self.isCompactView = true
+                                }
+                                
+                                Button("Card View") {
+                                    self.isCompactView = false
+                                }
+                            } label: {
+                                Image(systemName: "line.3.horizontal")
+                                    .font(.system(size: 28))
+                                    .bold()
+                                    .foregroundStyle(Color("slate"))
+                            }
+                    }
+                }
             }
-            .navigationTitle("Your Tasks")
-            .searchable(text: $search)
         }
     }
     
@@ -85,6 +71,12 @@ struct TaskView: View {
     }
 }
 
-#Preview {
-    TaskView()
+
+struct TaskView_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static var previews: some View {
+        TaskView()
+            .environmentObject(viewModel)
+    }
 }
