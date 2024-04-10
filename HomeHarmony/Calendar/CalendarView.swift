@@ -73,6 +73,7 @@ struct CalendarView: View {
                         } label: {
                             CalendarButtonView(dayToTask: dayToTask, day: day)
                         }
+                        .disabled(!tasksExist(day: day))
                     }
                 }
             }
@@ -83,6 +84,10 @@ struct CalendarView: View {
         .onChange(of: date) {
             self.days = date.calendarDisplayDays
         }
+    }
+    
+    private func tasksExist(day: Date) -> Bool {
+        return dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] != nil
     }
 }
 
@@ -95,30 +100,30 @@ struct CalendarButtonView: View {
             Text("\(day.formatted(.dateTime.day()))")
                 .font(.custom("Sansita-Bold", size: 15))
                 .foregroundStyle(Color("textColor"))
-            
-//            HStack(spacing: 2) {
-//                if dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] == nil {
-//                    Circle()
-//                        .frame(width: 5, height: 5)
-//                        .foregroundStyle(.clear)
-//                } else {
-//                    ForEach(Array(dayToTask.keys), id: \.self) { key in
-//                        ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
-//                            
-//                            if Calendar.current.date(from: key)!.startOfDay == day {
-//                                Circle()
-//                                    .frame(width: 5, height: 5)
-//                                    .foregroundStyle(progressColor(progress: progress))
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+                .offset(y: tasksExist() ? -10 : 0)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical)
         .background(Color("secondaryColor"))
         .cornerRadius(5)
+        .overlay(alignment: .bottom) {
+            HStack(spacing: 2) {
+                ForEach(Array(dayToTask.keys), id: \.self) { key in
+                    ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
+                        if Calendar.current.date(from: key)!.startOfDay == day {
+                            Circle()
+                                .frame(width: 5, height: 5)
+                                .foregroundStyle(progressColor(progress: progress))
+                                .offset(y: -10)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func tasksExist() -> Bool {
+        return dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] != nil
     }
 }
 
