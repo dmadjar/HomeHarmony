@@ -17,7 +17,7 @@ struct SearchComponent: View {
             TextField("", text: $search, 
                       prompt: Text("Search")
                 .font(.custom("Sansita-Regular", size: 20))
-                .foregroundStyle(Color("slate").opacity(0.5))
+                .foregroundStyle(Color("textColor").opacity(0.5))
             )
             
             Spacer()
@@ -35,8 +35,8 @@ struct SearchComponent: View {
         }
         .padding(5)
         .font(.custom("Sansita-Regular", size: 20))
-        .foregroundStyle(Color("slate").opacity(0.5))
-        .background(Color("lightGray"))
+        .foregroundStyle(Color("textColor").opacity(0.5))
+        .background(Color("secondaryColor"))
         .cornerRadius(10)
     }
 }

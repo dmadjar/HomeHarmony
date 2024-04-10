@@ -19,33 +19,26 @@ struct FamilyComponent: View {
                     
                     Spacer()
                   
-                        
                     Text(extendedFamily.creator.firstName)
                         .font(.custom("Sansita-Bold", size: 15))
                         .padding(.vertical, 5)
                         .padding(.horizontal, 10)
-                        .background(.black.opacity(0.10))
+                        .background(Color("black").opacity(0.15))
                         .cornerRadius(5)
                 }
                 
                 Text(numTasks(tasks: extendedFamily.tasks))
                     .font(.custom("Sansita-Bold", size: 15))
             }
-            
+            .foregroundStyle(Color("black"))
             
             Image(systemName: "chevron.right")
                 .font(.system(size: 20))
-                .foregroundStyle(.black.opacity(0.1))
+                .foregroundStyle(Color("black"))
                 .bold()
         }
         .padding(15)
-        .background(
-            LinearGradient(
-                colors: [Color("lightOrange"), Color("darkOrange")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
+        .background(Color("blue"))
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
@@ -61,6 +54,18 @@ struct FamilyComponent: View {
     }
 }
 
-//#Preview {
-//    FamilyComponent()
-//}
+struct FamilyComponent_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static let extendedFamily = ExtendedFamily(
+        familyName: "Family Name",
+        creator: CustomUser(firstName: "Daniel", lastName: "Madjar"),
+        members: [],
+        tasks: []
+    )
+    
+    static var previews: some View {
+        FamilyComponent(extendedFamily: extendedFamily)
+            .environmentObject(viewModel)
+    }
+}

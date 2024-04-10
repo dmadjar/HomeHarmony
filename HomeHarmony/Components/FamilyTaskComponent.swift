@@ -27,7 +27,7 @@ struct FamilyTaskComponent: View {
                 .font(.custom("Sansita-Bold", size: 15))
                 .padding(.vertical, 5)
                 .padding(.horizontal, 10)
-                .background(.black.opacity(0.10))
+                .background(Color("black").opacity(0.15))
                 .cornerRadius(5)
             }
             
@@ -38,14 +38,9 @@ struct FamilyTaskComponent: View {
                 .font(.custom("Sansita-Bold", size: 15))
         }
         .padding(15)
-        .background(
-            LinearGradient(
-                colors: [Color("lightGreen"), Color("darkGreen")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
+        .background(Color("red"))
         .cornerRadius(10)
+        .foregroundStyle(Color("black"))
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
     
@@ -57,6 +52,23 @@ struct FamilyTaskComponent: View {
     }
 }
 
-//#Preview {
-//    FamilyTaskComponent()
-//}
+struct FamilyTaskComponent_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static let extendedTaskItem = ExtendedTaskItem(
+        task: TaskItem(
+            taskName: "Task Name",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ut rhoncus dui, at imperdiet diam",
+            assigneeID: "",
+            finishBy: Date.now,
+            familyID: "",
+            progress: 0
+        ),
+        assigneeFirstName: "Daniel"
+    )
+    
+    static var previews: some View {
+        FamilyTaskComponent(extendedTask: extendedTaskItem)
+            .environmentObject(viewModel)
+    }
+}

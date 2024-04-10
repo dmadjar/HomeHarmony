@@ -41,10 +41,15 @@ struct MainView: View {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
         }
-        .tint(Color("slate"))
+        .tint(Color("textColor"))
     }
 }
 
-#Preview {
-    MainView()
+struct MainView_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static var previews: some View {
+        MainView()
+            .environmentObject(viewModel)
+    }
 }

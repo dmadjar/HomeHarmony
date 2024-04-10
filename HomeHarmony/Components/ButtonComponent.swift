@@ -20,9 +20,9 @@ struct ButtonComponentStyle: ButtonStyle {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(configuration.isPressed ? Color("slate").opacity(0.75) : Color("slate"))
+        .background(configuration.isPressed ? Color("textColor").opacity(0.75) : Color("textColor"))
         .cornerRadius(10)
-        .foregroundStyle(.white)
+        .foregroundStyle(Color("defaultColor"))
         .font(.custom("Sansita-Bold", size: 20))
         .scaleEffect(configuration.isPressed ? 0.95 : 1)
         .animation(.easeOut(duration: 0.2), value: configuration.isPressed)

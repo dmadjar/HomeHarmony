@@ -21,7 +21,7 @@ struct CheckmarkView: View {
                     ForEach(0..<9) { _ in
                         Image(systemName: "checkmark.circle.fill")
                             .font(.system(size: 28))
-                            .foregroundStyle(Color("darkBlue"))
+                            .foregroundStyle(Color("blue"))
                     }
                 }
                 .offset(x: isEven(index: index) ? 25 : 0)

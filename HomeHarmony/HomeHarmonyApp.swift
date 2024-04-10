@@ -13,7 +13,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct HomeHarmonyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
-    @AppStorage("isDarkMode") var isDarkMode: Bool = false
+    @AppStorage("isDarkMode") var isDarkMode: Bool = true
     
     @StateObject var viewModel = AuthenticationViewModel()
     

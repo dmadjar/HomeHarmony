@@ -46,13 +46,8 @@ struct TaskCardComponent: View {
             }
         }
         .padding(15)
-        .background(
-            LinearGradient(
-                colors: [Color("lightGreen"), Color("darkGreen")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
+        .background(Color("red"))
+        .foregroundStyle(Color("black"))
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
         .transition(.move(edge: .bottom))
@@ -67,6 +62,21 @@ struct TaskCardComponent: View {
     }
 }
 
-//#Preview {
-//    TaskCardComponent(isCompactView: true)
-//}
+struct TaskCardComponent_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static let taskItem = TaskItem(
+        taskName: "Task Name",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ut rhoncus dui, at imperdiet diam",
+        assigneeID: "",
+        finishBy: Date.now,
+        familyID: "",
+        progress: 0
+    )
+    
+    static var previews: some View {
+        TaskCardComponent(isCompactView: false, taskItem: taskItem)
+            .environmentObject(viewModel)
+    }
+}
+

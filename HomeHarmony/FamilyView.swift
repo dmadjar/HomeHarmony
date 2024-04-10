@@ -42,6 +42,8 @@ struct FamilyView: View {
                 }
                 .padding(.horizontal)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color("backgroundColor"))
             .safeAreaInset(edge: .top) {
                 NavBarComponent(
                     search: $search,
@@ -71,6 +73,11 @@ struct FamilyView: View {
     }
 }
 
-#Preview {
-    FamilyView()
+struct FamilyView_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static var previews: some View {
+        FamilyView()
+            .environmentObject(viewModel)
+    }
 }

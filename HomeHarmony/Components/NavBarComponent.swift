@@ -28,7 +28,7 @@ struct NavBarComponent<Content: View>: View {
         }
         .padding(.horizontal)
         .padding(.bottom, 10)
-        .background(Color(.white))
+        .background(Color("backgroundColor"))
     }
 }
 

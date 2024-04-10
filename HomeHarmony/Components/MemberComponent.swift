@@ -23,23 +23,25 @@ struct MemberComponent: View {
                     .font(.custom("Sansita-Bold", size: 15))
                     .padding(.vertical, 5)
                     .padding(.horizontal, 10)
-                    .background(.black.opacity(0.10))
+                    .background(Color("black").opacity(0.15))
                     .cornerRadius(5)
             }
         }
         .padding(15)
-        .background(
-            LinearGradient(
-                colors: [Color("lightOrange"), Color("darkOrange")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
+        .background(Color("red"))
+        .foregroundStyle(Color("black"))
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
 }
 
-//#Preview {
-//    MemberComponent()
-//}
+struct MemberComponent_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static let customUser = CustomUser(firstName: "Daniel", lastName: "Madjar")
+    
+    static var previews: some View {
+        MemberComponent(member: customUser, creatorId: "")
+            .environmentObject(viewModel)
+    }
+}

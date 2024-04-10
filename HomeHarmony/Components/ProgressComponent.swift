@@ -26,7 +26,7 @@ struct ProgressCompactComponent: View {
             }
         } label: {
              Image(systemName: image)
-                .foregroundStyle(color)
+                .foregroundStyle(Color("black").opacity(0.5))
                 .font(.system(size: 24))
         }
     }
@@ -43,19 +43,6 @@ struct ProgressCompactComponent: View {
             return ""
         }
     }
-    
-    var color: Color {
-        switch taskItem.progress {
-        case 0:
-            return Color("lightPink")
-        case 1:
-            return Color("lightYellow")
-        case 2:
-            return Color("lightGreen")
-        default:
-            return Color("slate")
-        }
-    }
                 
     private func updateProgress(progress: Int) {
         if let id = taskItem.id {
@@ -70,6 +57,23 @@ struct ProgressCompactComponent: View {
     }
 }
 
+struct ProgressCompactComponent_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static let taskItem = TaskItem(
+        taskName: "Task Name",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ut rhoncus dui, at imperdiet diam",
+        assigneeID: "",
+        finishBy: Date.now,
+        familyID: "",
+        progress: 0
+    )
+    
+    static var previews: some View {
+        ProgressCompactComponent(taskItem: taskItem)
+            .environmentObject(viewModel)
+    }
+}
 
 struct ProgressComponent: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
@@ -83,7 +87,7 @@ struct ProgressComponent: View {
                 Image(systemName: images.0)
                     .foregroundStyle(
                         taskItem.progress == 0
-                            ? Color("lightPink")
+                            ? Color("red")
                         : .white.opacity(0.3)
                     )
             }
@@ -94,7 +98,7 @@ struct ProgressComponent: View {
                 Image(systemName: images.1)
                     .foregroundStyle(
                         taskItem.progress == 1
-                            ? Color("lightYellow")
+                            ? Color("yellow")
                         : .white.opacity(0.3)
                     )
             }
@@ -105,13 +109,13 @@ struct ProgressComponent: View {
                 Image(systemName: images.2)
                     .foregroundStyle(
                         taskItem.progress == 2
-                            ? Color("lightGreen")
+                            ? Color("green")
                         : .white.opacity(0.3)
                     )
             }
         }
         .font(.system(size: 24))
-        .background(Color("slate").opacity(0.2))
+        .background(Color("black").opacity(0.5))
         .cornerRadius(50)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
@@ -142,6 +146,20 @@ struct ProgressComponent: View {
     }
 }
 
-//#Preview {
-//    ProgressComponent()
-//}
+struct ProgressComponent_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static let taskItem = TaskItem(
+        taskName: "Task Name",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ut rhoncus dui, at imperdiet diam",
+        assigneeID: "",
+        finishBy: Date.now,
+        familyID: "",
+        progress: 0
+    )
+    
+    static var previews: some View {
+        ProgressComponent(taskItem: taskItem)
+            .environmentObject(viewModel)
+    }
+}
