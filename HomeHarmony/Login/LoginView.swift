@@ -9,10 +9,14 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
+    @Environment(\.colorScheme) private var colorScheme
     @State private var isCreatingAccount: Bool = false
     
     var body: some View {
         ZStack {
+            Color("backgroundColor")
+                .ignoresSafeArea()
+            
             VStack {
                 CheckmarkView(isReversed: false)
                 
@@ -70,8 +74,8 @@ struct LoginView: View {
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 15)
                                 .font(.custom("Sansita-Bold", size: 20))
-                                .foregroundStyle(.white)
-                                .background(Color("slate"))
+                                .foregroundStyle(Color("defaultColor"))
+                                .background(Color("textColor"))
                                 .cornerRadius(10)
                                 .shadow(color: .black.opacity(0.10), radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/, x: 0, y: 5)
                         }
@@ -87,11 +91,11 @@ struct LoginView: View {
                             }
                         }
                         .font(.custom("Sansita-Regular", size: 15))
-                        .foregroundStyle(Color("slate").opacity(0.5))
                     }
-                   
                 }
-                .foregroundStyle(Color("slate").opacity(0.5))
+                .foregroundStyle(Color("textColor")
+                    .opacity(colorScheme == .dark ? 0.25 : 0.5)
+                )
                 .padding(.horizontal, 60)
                 
                 Spacer()

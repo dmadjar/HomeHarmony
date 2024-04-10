@@ -22,6 +22,9 @@ struct CalendarView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
+            Text("Schedule")
+                .font(.custom("Sansita-ExtraBold", size: 32))
+            
             VStack(spacing: 15) {
                 HStack {
                     Button {
@@ -92,9 +95,6 @@ struct CalendarButtonView: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            Text("Schedule")
-                .font(.custom("Sansita-ExtraBold", size: 32))
-            
             VStack(spacing: 15) {
                 Text("\(day.formatted(.dateTime.day()))")
                     .font(.custom("Sansita-Bold", size: 15))
