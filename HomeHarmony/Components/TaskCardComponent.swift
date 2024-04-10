@@ -46,7 +46,7 @@ struct TaskCardComponent: View {
             }
         }
         .padding(15)
-        .background(Color("redColor"))
+        .background(colorHelper(taskColor: taskItem.taskColor))
         .foregroundStyle(Color("blackColor"))
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
@@ -71,7 +71,8 @@ struct TaskCardComponent_Previews: PreviewProvider {
         assigneeID: "",
         finishBy: Date.now,
         familyID: "",
-        progress: 0
+        progress: 0,
+        taskColor: 0
     )
     
     static var previews: some View {

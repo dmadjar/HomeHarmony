@@ -38,7 +38,7 @@ struct FamilyTaskComponent: View {
                 .font(.custom("Sansita-Bold", size: 15))
         }
         .padding(15)
-        .background(Color("redColor"))
+        .background(colorHelper(taskColor: extendedTask.task.taskColor))
         .cornerRadius(10)
         .foregroundStyle(Color("blackColor"))
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
@@ -62,7 +62,8 @@ struct FamilyTaskComponent_Previews: PreviewProvider {
             assigneeID: "",
             finishBy: Date.now,
             familyID: "",
-            progress: 0
+            progress: 0,
+            taskColor: 0
         ),
         assigneeFirstName: "Daniel"
     )

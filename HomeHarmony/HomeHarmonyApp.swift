@@ -13,8 +13,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct HomeHarmonyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
-    @AppStorage("isDarkMode") var isDarkMode: Bool = true
-    
     @StateObject var viewModel = AuthenticationViewModel()
     
     var body: some Scene {
@@ -23,11 +21,11 @@ struct HomeHarmonyApp: App {
             case .unauthenticated, .authenticating:
                 LoginView()
                     .environmentObject(viewModel)
-                    .preferredColorScheme(isDarkMode ? .dark : .light)
+                    .preferredColorScheme(viewModel.isDarkMode ? .dark : .light)
             case .authenticated:
                 MainView()
                     .environmentObject(viewModel)
-                    .preferredColorScheme(isDarkMode ? .dark : .light)
+                    .preferredColorScheme(viewModel.isDarkMode ? .dark : .light)
             }
         }
         .onChange(of: viewModel.user) {

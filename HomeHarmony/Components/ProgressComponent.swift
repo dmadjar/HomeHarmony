@@ -66,7 +66,8 @@ struct ProgressCompactComponent_Previews: PreviewProvider {
         assigneeID: "",
         finishBy: Date.now,
         familyID: "",
-        progress: 0
+        progress: 0, 
+        taskColor: 0
     )
     
     static var previews: some View {
@@ -155,7 +156,8 @@ struct ProgressComponent_Previews: PreviewProvider {
         assigneeID: "",
         finishBy: Date.now,
         familyID: "",
-        progress: 0
+        progress: 0,
+        taskColor: 0
     )
     
     static var previews: some View {

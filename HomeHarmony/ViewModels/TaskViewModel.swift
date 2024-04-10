@@ -10,7 +10,7 @@ import FirebaseCore
 import FirebaseFirestore
 
 extension AuthenticationViewModel {
-    func createTask(familyID: String, taskName: String, description: String, assigneeID: String, assignee: CustomUser, finishBy: Date) async {
+    func createTask(familyID: String, taskName: String, description: String, assigneeID: String, assignee: CustomUser, finishBy: Date, taskColor: Int) async {
         do {
             let task = TaskItem(
                 taskName: taskName,
@@ -18,7 +18,8 @@ extension AuthenticationViewModel {
                 assigneeID: assigneeID,
                 finishBy: finishBy,
                 familyID: familyID,
-                progress: 0
+                progress: 0,
+                taskColor: taskColor
             )
             
             let taskRef = try db.collection("tasks").addDocument(from: task)

@@ -32,7 +32,6 @@ struct FriendsView: View {
                     .background(Color("secondaryColor"))
                     .foregroundStyle(Color("textColor"))
                     .cornerRadius(10)
-                    .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
                 }
                 
                 if !viewModel.friendRequests.isEmpty {
@@ -71,7 +70,6 @@ struct FriendsView: View {
                         .background(Color("secondaryColor"))
                         .foregroundStyle(Color("textColor"))
                         .cornerRadius(10)
-                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
                     }
                 }
             }

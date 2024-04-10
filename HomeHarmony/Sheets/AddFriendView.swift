@@ -38,6 +38,7 @@ struct AddFriendView: View {
                                 .padding(10)
                                 .background(Color("textColor"))
                                 .foregroundStyle(Color("defaultColor"))
+                                .cornerRadius(5)
                             } else {
                                 Button {
                                     viewModel.sendFriendRequest(friendId: user.id)
@@ -54,7 +55,6 @@ struct AddFriendView: View {
                         .background(Color("secondaryColor"))
                         .foregroundStyle(Color("textColor"))
                         .cornerRadius(10)
-                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
                     }
                 }
             }

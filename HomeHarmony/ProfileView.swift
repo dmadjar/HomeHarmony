@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
-    @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @State private var showFriends: Bool = false
     @State private var isAddingFriend: Bool = false
     
@@ -33,7 +32,7 @@ struct ProfileView: View {
                     
                     Spacer()
                     
-                    Toggle("", isOn: $isDarkMode)
+                    Toggle("", isOn: $viewModel.isDarkMode)
                         .tint(Color("blueColor"))
                 }
                 .padding()

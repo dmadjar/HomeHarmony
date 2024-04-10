@@ -23,6 +23,7 @@ public struct TaskItem: Codable, Identifiable {
     var finishBy: Date
     var familyID: String
     var progress: Int
+    var taskColor: Int
     
     mutating func changeProgress(progress: Int) {
         self.progress = progress

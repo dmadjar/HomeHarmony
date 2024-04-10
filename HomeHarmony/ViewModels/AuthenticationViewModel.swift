@@ -5,7 +5,7 @@
 //  Created by Daniel Madjar on 3/18/24.
 //
 
-import Foundation
+import SwiftUI
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
@@ -25,6 +25,7 @@ enum AuthenticationFlow {
 class AuthenticationViewModel: ObservableObject {
     let db = Firestore.firestore()
     
+    @AppStorage("isDarkMode") var isDarkMode: Bool = true
     @Published var email = ""
     @Published var password = ""
     @Published var confirmPassword = ""
