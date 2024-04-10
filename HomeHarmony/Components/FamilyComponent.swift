@@ -23,24 +23,23 @@ struct FamilyComponent: View {
                         .font(.custom("Sansita-Bold", size: 15))
                         .padding(.vertical, 5)
                         .padding(.horizontal, 10)
-                        .background(Color("black").opacity(0.15))
+                        .background(Color("blackColor").opacity(0.15))
                         .cornerRadius(5)
                 }
                 
                 Text(numTasks(tasks: extendedFamily.tasks))
                     .font(.custom("Sansita-Bold", size: 15))
             }
-            .foregroundStyle(Color("black"))
+            .foregroundStyle(Color("textColor"))
             
             Image(systemName: "chevron.right")
                 .font(.system(size: 20))
-                .foregroundStyle(Color("black"))
+                .foregroundStyle(Color("textColor"))
                 .bold()
         }
         .padding(15)
-        .background(Color("blue"))
+        .background(Color("secondaryColor"))
         .cornerRadius(10)
-        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
     
     private func numTasks(tasks: [ExtendedTaskItem]) -> String {

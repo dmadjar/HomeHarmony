@@ -23,13 +23,13 @@ struct MemberComponent: View {
                     .font(.custom("Sansita-Bold", size: 15))
                     .padding(.vertical, 5)
                     .padding(.horizontal, 10)
-                    .background(Color("black").opacity(0.15))
+                    .background(Color("blackColor").opacity(0.15))
                     .cornerRadius(5)
             }
         }
         .padding(15)
-        .background(Color("red"))
-        .foregroundStyle(Color("black"))
+        .background(Color("redColor"))
+        .foregroundStyle(Color("blackColor"))
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }

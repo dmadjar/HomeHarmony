@@ -14,7 +14,11 @@ struct AddFriendView: View {
     @State private var search: String = ""
     
     var body: some View {
-        NavigationStack {
+        VStack(alignment: .leading) {
+            Text("Add Friends")
+                .font(.custom("Sansita-ExtraBold", size: 36))
+                .foregroundStyle(Color("textColor"))
+            
             ScrollView {
                 VStack(spacing: 15) {
                     ForEach(viewModel.usersNotFriends) { user in
@@ -28,15 +32,12 @@ struct AddFriendView: View {
                             if viewModel.requested(friendId: user.id) {
                                 HStack {
                                     Text("Sent")
-                                        
+                                    
                                     Image(systemName: "paperplane.fill")
                                 }
                                 .padding(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(.black, lineWidth: 3)
-                                )
-                                .opacity(0.75)
+                                .background(Color("textColor"))
+                                .foregroundStyle(Color("defaultColor"))
                             } else {
                                 Button {
                                     viewModel.sendFriendRequest(friendId: user.id)
@@ -48,20 +49,21 @@ struct AddFriendView: View {
                                 }
                             }
                         }
-                        .padding()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(.black, lineWidth: 3)
-                        )
+                        .padding(15)
+                        .font(.custom("Sansita-Bold", size: 17))
+                        .background(Color("secondaryColor"))
+                        .foregroundStyle(Color("textColor"))
+                        .cornerRadius(10)
+                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
                     }
                 }
-                .padding(.horizontal)
             }
-            .navigationTitle("Add Friends")
         }
-        .searchable(text: $search)
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color("backgroundColor"))
         .safeAreaInset(edge: .bottom) {
-            ButtonComponent(title: "Done", image: nil) {
+            ButtonComponent(title: "Done", image: nil, backgroundColor: Color("textColor"), textColor: Color("defaultColor")) {
                 self.isAddingFriend = false
             }
             .padding()

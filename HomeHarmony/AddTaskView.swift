@@ -59,7 +59,7 @@ struct AddTaskView: View {
                             .datePickerStyle(GraphicalDatePickerStyle())
                             .frame(maxHeight: 400)
             
-            ButtonComponent(title: "Done!", image: nil) {
+            ButtonComponent(title: "Done!", image: nil, backgroundColor: Color("textColor"), textColor: Color("defaultColor")) {
                 Task {
                     await addTask()
                     dismiss()

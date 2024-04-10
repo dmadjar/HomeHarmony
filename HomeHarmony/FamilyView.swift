@@ -52,7 +52,7 @@ struct FamilyView: View {
                 )
             }
             .safeAreaInset(edge: .bottom) {
-                ButtonComponent(title: "Create Family", image: "plus") {
+                ButtonComponent(title: "Create Family", image: "plus", backgroundColor: Color("blueColor"), textColor: Color("blackColor")) {
                     self.isAddingFamily = true
                 }
                 .padding()

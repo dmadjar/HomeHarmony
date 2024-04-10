@@ -10,14 +10,14 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     
-//    init() {
-//        let appearance = UITabBarAppearance()
-//        appearance.backgroundColor = UIColor(.white)
-//        appearance.shadowColor = .none
-//        appearance.shadowImage = nil
-//        UITabBar.appearance().standardAppearance = appearance
-//        UITabBar.appearance().scrollEdgeAppearance = appearance
-//    }
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.backgroundColor = UIColor(Color("backgroundColor"))
+        appearance.shadowColor = .none
+        appearance.shadowImage = nil
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
     
     var body: some View {
         TabView {
@@ -31,14 +31,9 @@ struct MainView: View {
                     Label("Families", systemImage: "house")
                 }
             
-            FriendsView()
-                .tabItem {
-                    Label("Friends", systemImage: "person.2")
-                }
-            
             ProfileView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
+                    Label("Profile", systemImage: "person.fill")
                 }
         }
         .tint(Color("textColor"))

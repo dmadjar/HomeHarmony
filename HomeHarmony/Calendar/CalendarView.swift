@@ -30,7 +30,7 @@ struct CalendarView: View {
                     Button {
                         self.date = date.startOfPreviousMonth
                     } label: {
-                        Image(systemName: "arrow.backward")
+                        Image(systemName: "chevron.left")
                             .bold()
                     }
                     
@@ -44,7 +44,7 @@ struct CalendarView: View {
                     Button {
                         self.date = date.startOfNextMonth
                     } label: {
-                        Image(systemName: "arrow.forward")
+                        Image(systemName: "chevron.right")
                             .bold()
                     }
                 }
@@ -58,12 +58,10 @@ struct CalendarView: View {
                     }
                 }
             }
-            .foregroundStyle(.white)
-            .padding()
-            .background(Color("slate"))
+            .foregroundStyle(Color("textColor"))
             .cornerRadius(10)
                 
-            LazyVGrid(columns: columns) {
+            LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(days, id: \.self) { day in
                     if day.monthInt != date.monthInt {
                         Text("")
@@ -78,7 +76,6 @@ struct CalendarView: View {
                     }
                 }
             }
-            .padding(.horizontal)
         }
         .onAppear {
             self.days = date.calendarDisplayDays
@@ -94,41 +91,34 @@ struct CalendarButtonView: View {
     let day: Date
     
     var body: some View {
-        VStack(spacing: 10) {
-            VStack(spacing: 15) {
-                Text("\(day.formatted(.dateTime.day()))")
-                    .font(.custom("Sansita-Bold", size: 15))
-                
-                HStack(spacing: 2) {
-                    if dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] == nil {
-                        Circle()
-                            .frame(width: 5, height: 5)
-                            .foregroundStyle(.clear)
-                    } else {
-                        ForEach(Array(dayToTask.keys), id: \.self) { key in
-                            ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
-                                
-                                if Calendar.current.date(from: key)!.startOfDay == day {
-                                    Circle()
-                                        .frame(width: 5, height: 5)
-                                        .foregroundStyle(progressColor(progress: progress))
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(.vertical, 10)
-            .fontWeight(.bold)
-            .frame(maxWidth: .infinity, minHeight: 40)
-            .background(
-                RoundedRectangle(cornerRadius: 5)
-                    .foregroundStyle(
-                        Date.now.startOfDay == day.startOfDay
-                        ? Color("lightBlue")
-                        : .white)
-            )
+        VStack(spacing: 15) {
+            Text("\(day.formatted(.dateTime.day()))")
+                .font(.custom("Sansita-Bold", size: 15))
+                .foregroundStyle(Color("textColor"))
+            
+//            HStack(spacing: 2) {
+//                if dayToTask[Calendar.current.dateComponents([.year, .month, .day], from: day)] == nil {
+//                    Circle()
+//                        .frame(width: 5, height: 5)
+//                        .foregroundStyle(.clear)
+//                } else {
+//                    ForEach(Array(dayToTask.keys), id: \.self) { key in
+//                        ForEach(Array(zip(dayToTask[key]!.indices, dayToTask[key]!)), id: \.0) { index, progress in
+//                            
+//                            if Calendar.current.date(from: key)!.startOfDay == day {
+//                                Circle()
+//                                    .frame(width: 5, height: 5)
+//                                    .foregroundStyle(progressColor(progress: progress))
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical)
+        .background(Color("secondaryColor"))
+        .cornerRadius(5)
     }
 }
 

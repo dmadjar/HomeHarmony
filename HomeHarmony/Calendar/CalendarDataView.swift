@@ -34,7 +34,7 @@ struct CalendarDataView: View {
                         .font(.custom("Sansita-ExtraBold", size: 36))
                 }
             }
-            .foregroundStyle(Color("slate"))
+            .foregroundStyle(Color("textColor"))
             
             ScrollView {
                 VStack(spacing: 15) {

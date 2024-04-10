@@ -50,7 +50,7 @@ struct TaskView: View {
                             Image(systemName: "line.3.horizontal")
                                 .font(.system(size: 28))
                                 .bold()
-                                .foregroundStyle(Color("slate"))
+                                .foregroundStyle(Color("textColor"))
                         }
                 }
             }

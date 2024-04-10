@@ -26,7 +26,7 @@ struct ProgressCompactComponent: View {
             }
         } label: {
              Image(systemName: image)
-                .foregroundStyle(Color("black").opacity(0.5))
+                .foregroundStyle(Color("blackColor").opacity(0.5))
                 .font(.system(size: 24))
         }
     }
@@ -87,7 +87,7 @@ struct ProgressComponent: View {
                 Image(systemName: images.0)
                     .foregroundStyle(
                         taskItem.progress == 0
-                            ? Color("red")
+                            ? Color("redColor")
                         : .white.opacity(0.3)
                     )
             }
@@ -98,7 +98,7 @@ struct ProgressComponent: View {
                 Image(systemName: images.1)
                     .foregroundStyle(
                         taskItem.progress == 1
-                            ? Color("yellow")
+                            ? Color("yellowColor")
                         : .white.opacity(0.3)
                     )
             }
@@ -109,13 +109,13 @@ struct ProgressComponent: View {
                 Image(systemName: images.2)
                     .foregroundStyle(
                         taskItem.progress == 2
-                            ? Color("green")
+                            ? Color("greenColor")
                         : .white.opacity(0.3)
                     )
             }
         }
         .font(.system(size: 24))
-        .background(Color("black").opacity(0.5))
+        .background(Color("blackColor").opacity(0.5))
         .cornerRadius(50)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }

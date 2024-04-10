@@ -7,43 +7,16 @@
 
 import SwiftUI
 
-
-//struct ProgressTag: View {
-//    let name: String
-//    let progress: Int
-//    
-//    var body: some View {
-//        Text(name)
-//            .modifier(ProgressModifier(bgColor: progressColor(progress: progress)))
-//    }
-//}
-
-func progressColor(progress: Int) -> LinearGradient {
+func progressColor(progress: Int) -> Color {
     switch progress {
     case 0:
-        return LinearGradient(
-            colors: [Color("lightPink"), Color("darkPink")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        return Color("redColor")
     case 1:
-        return LinearGradient(
-            colors: [Color("lightOrange"), Color("darkOrange")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        return Color("yellowColor")
     case 2:
-        return LinearGradient(
-            colors: [Color("lightGreen"), Color("darkGreen")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        return Color("greenColor")
     default:
-        return LinearGradient(
-            colors: [.black],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        return Color("blackColor")
     }
 }
 
@@ -82,7 +55,7 @@ struct FamilyDetailView: View {
         
         navBarAppearance.shadowImage = nil
         navBarAppearance.shadowColor = .none
-        navBarAppearance.backgroundColor = .white
+        navBarAppearance.backgroundColor = UIColor(named: "backgroundColor")
         navBarAppearance.buttonAppearance = backAppearance
         
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
@@ -104,6 +77,7 @@ struct FamilyDetailView: View {
                 }
                 
                 CalendarView(sheetOpen: $sheetOpen, showCalendarDetail: $activeSheet, dateSelected: $dateSelected, dayToTask: dayToTask)
+                  
                 
                 VStack(alignment: .leading, spacing: 15) {
                     Text("Members")
@@ -119,6 +93,7 @@ struct FamilyDetailView: View {
             }
             .padding(.horizontal)
         }
+        .background(Color("backgroundColor"))
         .safeAreaInset(edge: .top) {
             NavBarComponent(
                 search: $search,
@@ -127,7 +102,7 @@ struct FamilyDetailView: View {
             )
         }
         .safeAreaInset(edge: .bottom) {
-            ButtonComponent(title: "Add Task", image: "plus") {
+            ButtonComponent(title: "Create Task", image: "plus", backgroundColor: Color("blueColor"), textColor: Color("blackColor")) {
                 self.activeSheet = .addTask
                 self.sheetOpen = true
             }
@@ -182,5 +157,21 @@ struct FamilyDetailView: View {
             
         }
         return dictionary
+    }
+}
+
+struct FamilyDetailView_Previews: PreviewProvider {
+    static let viewModel = AuthenticationViewModel()
+
+    static let extendedFamily = ExtendedFamily(
+        familyName: "Family Name",
+        creator: CustomUser(firstName: "Daniel", lastName: "Madjar"),
+        members: [],
+        tasks: []
+    )
+    
+    static var previews: some View {
+        FamilyDetailView(extendedFamily: extendedFamily)
+            .environmentObject(viewModel)
     }
 }

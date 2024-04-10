@@ -27,7 +27,7 @@ struct FamilyTaskComponent: View {
                 .font(.custom("Sansita-Bold", size: 15))
                 .padding(.vertical, 5)
                 .padding(.horizontal, 10)
-                .background(Color("black").opacity(0.15))
+                .background(Color("blackColor").opacity(0.15))
                 .cornerRadius(5)
             }
             
@@ -38,9 +38,9 @@ struct FamilyTaskComponent: View {
                 .font(.custom("Sansita-Bold", size: 15))
         }
         .padding(15)
-        .background(Color("red"))
+        .background(Color("redColor"))
         .cornerRadius(10)
-        .foregroundStyle(Color("black"))
+        .foregroundStyle(Color("blackColor"))
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
     

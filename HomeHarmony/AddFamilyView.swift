@@ -25,14 +25,14 @@ struct AddFamilyView: View {
                     TextField("", text: $familyName,
                               prompt: Text("Family Name")
                         .font(.custom("Sansita-Regular", size: 20))
-                        .foregroundStyle(Color("slate").opacity(0.5))
+                        .foregroundStyle(Color("textColor").opacity(0.5))
                     )
                 }
                 
                 RoundedRectangle(cornerRadius: 10)
                     .frame(height: 2)
             }
-            .foregroundStyle(Color("slate").opacity(0.5))
+            .foregroundStyle(Color("textColor").opacity(0.5))
             
             if !viewModel.friends.isEmpty {
                 HStack {
@@ -58,22 +58,16 @@ struct AddFamilyView: View {
                             } label: {
                                 if members.contains(friend) {
                                     Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(Color("lightGreen"))
+                                        .foregroundStyle(Color("greenColor"))
                                 } else {
                                     Image(systemName: "circle")
-                                        .foregroundStyle(Color("slate").opacity(0.5))
+                                        .foregroundStyle(Color("textColor").opacity(0.5))
                                 }
                             }
                         }
                         .font(.custom("Sansita-ExtraBold", size: 20))
                         .padding(15)
-                        .background(
-                            LinearGradient(
-                                colors: [Color("lightOrange"), Color("darkOrange")],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+                        .background(Color("redColor"))
                         .cornerRadius(10)
                         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
                     }
@@ -82,7 +76,7 @@ struct AddFamilyView: View {
                 .cornerRadius(10)
             }
             
-            ButtonComponent(title: "Done", image: nil) {
+            ButtonComponent(title: "Done", image: nil, backgroundColor: Color("textColor"), textColor: Color("defaultColor")) {
                 Task {
                     if let customUser = viewModel.customUser {
                         members.insert(customUser)

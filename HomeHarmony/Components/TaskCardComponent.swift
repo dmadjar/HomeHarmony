@@ -46,8 +46,8 @@ struct TaskCardComponent: View {
             }
         }
         .padding(15)
-        .background(Color("red"))
-        .foregroundStyle(Color("black"))
+        .background(Color("redColor"))
+        .foregroundStyle(Color("blackColor"))
         .cornerRadius(10)
         .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
         .transition(.move(edge: .bottom))
