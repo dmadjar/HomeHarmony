@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
+    
     @State private var showFriends: Bool = false
     @State private var isAddingFriend: Bool = false
     
@@ -101,7 +102,15 @@ struct ProfileView: View {
                 NavBarComponent(
                     search: .constant(""),
                     title: "Hey \(viewModel.getFirstName())!",
-                    content: {}
+                    content: {
+                        if let profilePic = viewModel.profilePicture {
+                            profilePic
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .scaledToFit()
+                                .cornerRadius(30)
+                        }
+                    }
                 )
             }
         }

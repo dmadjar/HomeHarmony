@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseStorage
 
 enum AuthenticationState {
     case unauthenticated
@@ -24,6 +25,7 @@ enum AuthenticationFlow {
 @MainActor
 class AuthenticationViewModel: ObservableObject {
     let db = Firestore.firestore()
+    let storage = Storage.storage()
     
     @AppStorage("isDarkMode") var isDarkMode: Bool = true
     @Published var email = ""
@@ -37,6 +39,7 @@ class AuthenticationViewModel: ObservableObject {
     
     @Published var user: User?
     @Published var customUser: CustomUser?
+    @Published var profilePicture: Image?
     
     @Published var usersNotFriends: [CustomUser] = []
     @Published var requestsSent: [String?] = []
@@ -84,6 +87,7 @@ class AuthenticationViewModel: ObservableObject {
             self.friendRequests = await friRequests ?? []
             self.friends = await fri ?? []
             self.extendedFamilies = await families ?? []
+            self.fetchProfilePhoto()
         }
         
         print(result)

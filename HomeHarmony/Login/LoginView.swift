@@ -103,7 +103,7 @@ struct LoginView: View {
             }
         }
         .sheet(isPresented: $isCreatingAccount, content: {
-            CreateAccount()
+            CreateAccountView()
         })
     }
     
