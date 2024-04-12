@@ -11,6 +11,7 @@ struct LoginView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     @Environment(\.colorScheme) private var colorScheme
     @State private var isCreatingAccount: Bool = false
+    @State private var size: CGFloat = .zero
     
     var body: some View {
         ZStack {
@@ -103,7 +104,10 @@ struct LoginView: View {
             }
         }
         .sheet(isPresented: $isCreatingAccount, content: {
-            CreateAccountView()
+            ScrollView {
+                CreateAccountView()
+                    .modifier(GetChildViewHeightModifier(size: $size))
+            }
         })
     }
     

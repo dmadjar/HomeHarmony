@@ -19,23 +19,6 @@ struct FriendsView: View {
                         .cornerRadius(10)
                 }
             } else {
-                ForEach(viewModel.friends) { friend in
-                    HStack(spacing: 5) {
-                        
-                        
-                        Text(friend.firstName)
-                        
-                        Text(friend.lastName)
-                        
-                        Spacer()
-                    }
-                    .padding(15)
-                    .font(.custom("Sansita-Bold", size: 17))
-                    .background(Color("secondaryColor"))
-                    .foregroundStyle(Color("textColor"))
-                    .cornerRadius(10)
-                }
-                
                 if !viewModel.friendRequests.isEmpty {
                     ForEach(viewModel.friendRequests) { request in
                         HStack(spacing: 5) {
@@ -73,6 +56,29 @@ struct FriendsView: View {
                         .foregroundStyle(Color("textColor"))
                         .cornerRadius(10)
                     }
+                }
+                
+                ForEach(viewModel.friends, id: \.customUser.id) { friend in
+                    HStack(spacing: 10) {
+                        friend.profilePhoto
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                            .scaledToFit()
+                            .cornerRadius(30)
+                        
+                        HStack(spacing: 5) {
+                            Text(friend.customUser.firstName)
+                            
+                            Text(friend.customUser.lastName)
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(15)
+                    .font(.custom("Sansita-Bold", size: 17))
+                    .background(Color("secondaryColor"))
+                    .foregroundStyle(Color("textColor"))
+                    .cornerRadius(10)
                 }
             }
         }

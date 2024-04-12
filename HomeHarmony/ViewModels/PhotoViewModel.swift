@@ -13,10 +13,9 @@ extension AuthenticationViewModel {
     func loadTransferable(from imageSelection: PhotosPickerItem?) async throws {
         do {
             if let data = try await imageSelection?.loadTransferable(type: Data.self) {
-                if let uiImage = UIImage(data: data), let userId = user?.uid {
+                if let uiImage = UIImage(data: data) {
                     self.imageData = uiImage.jpegData(compressionQuality: 0.25)
                     self.profilePicture = Image(uiImage: UIImage(data: imageData!)!)
-                    self.uploadImage(user_id: userId)
                 }
             }
         } catch {
@@ -37,7 +36,7 @@ extension AuthenticationViewModel {
         }
     }
     
-    func fetchProfilePhoto() {
+    func fetchProfilePhoto() async {
         if let userId = user?.uid {
             let imageRef = storage.reference(withPath: "images/profile/\(userId).jpg")
             imageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
@@ -47,15 +46,10 @@ extension AuthenticationViewModel {
                     let uiImg = UIImage(data: data!)
                     if let uiImg = uiImg {
                         self.profilePicture = Image(uiImage: uiImg)
+                        print("Fetched profile photo.")
                     }
                 }
             }
         }
     }
-    
-//    func fetchFriendPhoto( img: inout Image, userId: String) async -> Image {
-//        var img = Image(systemName: "questionmark.circle.fill")
-//        
-//        
-//    }
 }

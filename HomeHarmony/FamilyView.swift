@@ -44,6 +44,17 @@ struct FamilyView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("backgroundColor"))
+            .overlay {
+                if familyResults.isEmpty && !viewModel.familiesLoading {
+                    EmptyListView(isFamily: true) {
+                        if search.isEmpty {
+                            Text("It looks like you have no families, try making one to get started!")
+                        } else {
+                            Text("No families with that name found!")
+                        }
+                    }
+                }
+            }
             .safeAreaInset(edge: .top) {
                 NavBarComponent(
                     search: $search,

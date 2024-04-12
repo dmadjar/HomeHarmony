@@ -15,7 +15,7 @@ struct NavBarComponent<Content: View>: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 5) {
+            HStack(alignment: .bottom, spacing: 5) {
                 Text(title)
                     .font(Font.custom("Sansita-ExtraBold", size: 36))
                 

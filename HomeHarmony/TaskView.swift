@@ -34,6 +34,17 @@ struct TaskView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("backgroundColor"))
+            .overlay {
+                if taskResults.isEmpty && !viewModel.tasksLoading {
+                    EmptyListView(isFamily: false) {
+                        if search.isEmpty {
+                            Text("It looks like you have no tasks, try joining a family to get started!")
+                        } else {
+                            Text("No tasks with that name found!")
+                        }
+                    }
+                }
+            }
             .safeAreaInset(edge: .top) {
                 NavBarComponent(
                     search: $search,

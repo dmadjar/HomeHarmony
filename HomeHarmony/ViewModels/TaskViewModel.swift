@@ -5,7 +5,7 @@
 //  Created by Daniel Madjar on 3/27/24.
 //
 
-import Foundation
+import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
 
@@ -36,7 +36,9 @@ extension AuthenticationViewModel {
             
             for i in 0..<self.extendedFamilies.count {
                 if self.extendedFamilies[i].id == familyID {
-                    self.extendedFamilies[i].tasks.append(extendedTask)
+                    withAnimation {
+                        self.extendedFamilies[i].tasks.append(extendedTask)
+                    }
                     break
                 }
             }

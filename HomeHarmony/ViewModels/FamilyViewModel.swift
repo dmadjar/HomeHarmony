@@ -6,7 +6,7 @@
 //
 
 
-import Foundation
+import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
 
@@ -40,7 +40,9 @@ extension AuthenticationViewModel {
                     tasks: []
                 )
                 
-                self.extendedFamilies.append(extendedFamily)
+                withAnimation {
+                    self.extendedFamilies.append(extendedFamily)
+                }
             }
             
             print("Successfully created family.")

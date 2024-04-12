@@ -47,7 +47,7 @@ extension AuthenticationViewModel {
                 
                 self.usersNotFriends = self.usersNotFriends.filter { extendedUser in
                     for friend in self.friends {
-                        if friend.id == extendedUser.customUser.id {
+                        if friend.customUser.id == extendedUser.customUser.id {
                             return false
                         }
                     }
@@ -96,25 +96,37 @@ extension AuthenticationViewModel {
         return nil
     }
     
-    func getFriends() async -> [CustomUser]? {
+    func getFriends() async {
         if let user = user {
             do {
                 let userFriends = try await db.collection("users").document(user.uid).collection("friends").getDocuments()
                 
-                var localFriends = [CustomUser]()
                 for friend in userFriends.documents {
                     let f = try await db.collection("users").document(friend.documentID).getDocument(as: CustomUser.self)
-                    localFriends.append(f)
+                    
+                    let imageRef = storage.reference(withPath: "images/profile/\(friend.documentID).jpg")
+                    
+                    var photo: Image = Image(systemName: "questionmark.circle.fill")
+                    
+                    imageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        } else {
+                            photo = Image(uiImage: UIImage(data: data!)!)
+                            
+                            let extendedCustomUser = ExtendedCustomUser(
+                                customUser: f,
+                                profilePhoto: photo
+                            )
+                            
+                            self.friends.append(extendedCustomUser)
+                        }
+                    }
                 }
-                
-                print("Sucessfully found friends")
-                return localFriends
             } catch {
                 print("Could not get friends.")
             }
         }
-        
-        return nil
     }
     
     func acceptRequest(requestId: String?) async {
@@ -129,8 +141,26 @@ extension AuthenticationViewModel {
                 await declineRequest(requestId: requestId)
                 
                 let f = try await db.collection("users").document(requestId).getDocument(as: CustomUser.self)
-                self.friends.append(f)
-              
+                
+                let imageRef = storage.reference(withPath: "images/profile/\(requestId).jpg")
+                
+                var photo: Image = Image(systemName: "questionmark.circle.fill")
+                
+                imageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    } else {
+                        photo = Image(uiImage: UIImage(data: data!)!)
+                        
+                        let extendedCustomUser = ExtendedCustomUser(
+                            customUser: f,
+                            profilePhoto: photo
+                        )
+                        
+                        self.friends.append(extendedCustomUser)
+                    }
+                }
+                
                 print("Successfully accepted friend request.")
             } catch {
                 print("Could not accept friend request.")

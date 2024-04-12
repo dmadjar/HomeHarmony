@@ -48,8 +48,13 @@ struct ProfileView: View {
                     } label: {
                         Text("See Friends")
                             
-                        Image(systemName: "chevron.down")
-                            .bold()
+                        if showFriends {
+                            Image(systemName: "chevron.down")
+                                .bold()
+                        } else {
+                            Image(systemName: "chevron.right")
+                                .bold()
+                        }
                     }
                     .font(.custom("Sansita-Bold", size: 17))
             
@@ -107,14 +112,14 @@ struct ProfileView: View {
                         if let profilePic = viewModel.profilePicture {
                             profilePic
                                 .resizable()
-                                .frame(width: 50, height: 50)
+                                .frame(width: 42, height: 42)
                                 .scaledToFit()
                                 .cornerRadius(30)
                         } else {
                             PhotosPicker(selection: $viewModel.imageSelection) {
                                 Image(systemName: "plus.circle.fill")
                                     .resizable()
-                                    .frame(width: 32, height: 32)
+                                    .frame(width: 42, height: 42)
                             }
                         }
                     }

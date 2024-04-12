@@ -43,20 +43,20 @@ struct AddFamilyView: View {
                 }
                 
                 ScrollView {
-                    ForEach(viewModel.friends) { friend in
+                    ForEach(viewModel.friends, id: \.customUser.id) { friend in
                         HStack {
-                            Text("\(friend.firstName) \(friend.lastName)")
+                            Text("\(friend.customUser.firstName) \(friend.customUser.lastName)")
                             
                             Spacer()
                             
                             Button {
-                                if members.contains(friend) {
-                                    members.remove(friend)
+                                if members.contains(friend.customUser) {
+                                    members.remove(friend.customUser)
                                 } else {
-                                    members.insert(friend)
+                                    members.insert(friend.customUser)
                                 }
                             } label: {
-                                if members.contains(friend) {
+                                if members.contains(friend.customUser) {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundStyle(Color("greenColor"))
                                 } else {
@@ -65,6 +65,7 @@ struct AddFamilyView: View {
                                 }
                             }
                         }
+                        .foregroundStyle(Color("blackColor"))
                         .font(.custom("Sansita-ExtraBold", size: 20))
                         .padding(15)
                         .background(Color("redColor"))
@@ -76,7 +77,7 @@ struct AddFamilyView: View {
                 .cornerRadius(10)
             }
             
-            ButtonComponent(title: "Done", image: nil, backgroundColor: Color("textColor"), textColor: Color("defaultColor")) {
+            ButtonComponent(title: "Done", image: nil, backgroundColor: Color("blueColor"), textColor: Color("textColor")) {
                 Task {
                     if let customUser = viewModel.customUser {
                         members.insert(customUser)

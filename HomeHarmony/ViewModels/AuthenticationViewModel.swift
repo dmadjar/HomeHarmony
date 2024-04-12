@@ -32,10 +32,8 @@ class AuthenticationViewModel: ObservableObject {
     @Published var imageData: Data?
     @Published var imageSelection: PhotosPickerItem? {
         didSet {
-            if let imageSelection {
-                Task {
-                    try await loadTransferable(from: imageSelection)
-                }
+            Task {
+                try await loadTransferable(from: imageSelection)
             }
         }
     }
@@ -58,7 +56,7 @@ class AuthenticationViewModel: ObservableObject {
     
     @Published var requestsSent: [String?] = []
     @Published var friendRequests: [CustomUser] = []
-    @Published var friends: [CustomUser] = []
+    @Published var friends: [ExtendedCustomUser] = []
     
     @Published var extendedFamilies: [ExtendedFamily] = []
     
@@ -88,40 +86,21 @@ class AuthenticationViewModel: ObservableObject {
     func fetchData() async {
         setDataLoading()
         
-        let clock = ContinuousClock()
-        let result = await clock.measure {
-            async let custUser = getUser()
-            async let families = getFam()
-            async let tasks = getYourTasks()
-            async let friRequests = getFriendRequests()
-            async let fri = getFriends()
-            
-            self.customUser = await custUser
-            self.yourTasks = await tasks ?? []
-            self.friendRequests = await friRequests ?? []
-            self.friends = await fri ?? []
-            self.extendedFamilies = await families ?? []
-            self.fetchProfilePhoto()
-        }
+        async let custUser = getUser()
+        async let families = getFam()
+        async let tasks = getYourTasks()
+        async let friRequests = getFriendRequests()
+       
+        await fetchProfilePhoto()
+        await getFriends()
         
-        print(result)
+        self.customUser = await custUser
+        self.yourTasks = await tasks ?? []
+        self.friendRequests = await friRequests ?? []
+        self.extendedFamilies = await families ?? []
+        
+        print(self.friends)
     }
-    
-//    func fetchData() async {
-//        setDataLoading()
-//        
-//        let clock = ContinuousClock()
-//        
-//        let result = await clock.measure {
-//            self.customUser = await getUser()
-//            self.yourTasks = await getYourTasks() ?? []
-//            self.friendRequests = await getFriendRequests() ?? []
-//            self.friends = await getFriends() ?? []
-//            self.extendedFamilies = await getFam() ?? []
-//        }
-//        
-//        print(result)
-//    }
     
     func reset() {
         self.email = ""
@@ -139,6 +118,7 @@ class AuthenticationViewModel: ObservableObject {
         self.yourTasks = []
         self.imageData = nil
         self.imageSelection = nil
+        self.profilePicture = nil
     }
     
     func setDataLoading() {
@@ -157,6 +137,7 @@ extension AuthenticationViewModel {
             
             if let user = self.user {
                 createUser(user)
+                uploadImage(user_id: user.uid)
             }
             
             return true

@@ -33,9 +33,11 @@ struct AddFriendView: View {
                                 .scaledToFit()
                                 .cornerRadius(30)
                             
-                            Text(user.customUser.firstName)
-                            
-                            Text(user.customUser.lastName)
+                            HStack(spacing: 5) {
+                                Text(user.customUser.firstName)
+                                
+                                Text(user.customUser.lastName)
+                            }
                             
                             Spacer()
                             

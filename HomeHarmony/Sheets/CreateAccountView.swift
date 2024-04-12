@@ -42,6 +42,7 @@ struct CreateAccountView: View {
                                 .resizable()
                                 .frame(width: 50, height: 50)
                                 .scaledToFit()
+                                .cornerRadius(30)
                         } else {
                             Image(systemName: "plus.circle.fill")
                                 .resizable()
@@ -55,9 +56,10 @@ struct CreateAccountView: View {
                 .background(Color("secondaryColor"))
                 .cornerRadius(10)
                 
-                ButtonComponent(title: "Create Account", image: nil, backgroundColor: Color("blueColor"), textColor: Color("defaultColor")) {
+                ButtonComponent(title: "Create Account", image: nil, backgroundColor: Color("blueColor"), textColor: Color("blackColor")) {
                     signUpWithEmailPassword()
                 }
+                .disabled(!canSignUp())
             }
             
             Spacer()
@@ -75,6 +77,10 @@ struct CreateAccountView: View {
                 dismiss()
             }
         }
+    }
+    
+    private func canSignUp() -> Bool {
+        return viewModel.imageSelection != nil
     }
 }
 
