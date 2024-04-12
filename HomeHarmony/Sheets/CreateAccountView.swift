@@ -10,7 +10,6 @@ import PhotosUI
 
 struct CreateAccountView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
-    @StateObject var imagePicker = ImagePickerViewModel()
     @Environment(\.dismiss) var dismiss
     @State private var selectingPhoto = false
     
@@ -37,8 +36,8 @@ struct CreateAccountView: View {
                     
                     Spacer()
                     
-                    PhotosPicker(selection: $imagePicker.imageSelection) {
-                        if let image = imagePicker.image {
+                    PhotosPicker(selection: $viewModel.imageSelection) {
+                        if let image = viewModel.profilePicture {
                             image
                                 .resizable()
                                 .frame(width: 50, height: 50)
@@ -71,7 +70,7 @@ struct CreateAccountView: View {
         Task {
             if await viewModel.signUpWithEmailPassword() {
                 if let userId = viewModel.user?.uid {
-                    imagePicker.uploadImage(user_id: userId)
+                    viewModel.uploadImage(user_id: userId)
                 }
                 dismiss()
             }

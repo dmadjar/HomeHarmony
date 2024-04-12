@@ -21,12 +21,6 @@ struct MainView: View {
     
     var body: some View {
         TabView {
-            AudioTestView()
-                .tabItem {
-                    Label("Audio", systemImage: "mic.fill")
-                }
-            
-            
             TaskView()
                 .tabItem {
                     Label("Tasks", systemImage: "checkmark.rectangle.stack")

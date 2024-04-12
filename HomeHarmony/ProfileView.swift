@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ProfileView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
@@ -109,6 +110,12 @@ struct ProfileView: View {
                                 .frame(width: 50, height: 50)
                                 .scaledToFit()
                                 .cornerRadius(30)
+                        } else {
+                            PhotosPicker(selection: $viewModel.imageSelection) {
+                                Image(systemName: "plus.circle.fill")
+                                    .resizable()
+                                    .frame(width: 32, height: 32)
+                            }
                         }
                     }
                 )

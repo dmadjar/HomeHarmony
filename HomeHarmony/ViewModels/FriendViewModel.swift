@@ -5,7 +5,7 @@
 //  Created by Daniel Madjar on 4/1/24.
 //
 
-import Foundation
+import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
 
@@ -20,16 +20,34 @@ extension AuthenticationViewModel {
                 for document in querySnapshot.documents {
                     do {
                         let userData = try document.data(as: CustomUser.self)
-                        self.usersNotFriends.append(userData)
+                        
+                        let imageRef = storage.reference(withPath: "images/profile/\(document.documentID).jpg")
+                        
+                        var photo: Image = Image(systemName: "questionmark.circle.fill")
+                        imageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+                            if let error = error {
+                                print(error.localizedDescription)
+                            } else {
+                                photo = Image(uiImage: UIImage(data: data!)!)
+                                
+                                let extendedCustomUser = ExtendedCustomUser(
+                                    customUser: userData,
+                                    profilePhoto: photo
+                                )
+                                
+                                self.usersNotFriends.append(extendedCustomUser)
+                            }
+                        }
+                       
                         print("Found User!")
                     } catch {
                         print("Error getting user: \(error.localizedDescription)")
                     }
                 }
                 
-                self.usersNotFriends = self.usersNotFriends.filter {
+                self.usersNotFriends = self.usersNotFriends.filter { extendedUser in
                     for friend in self.friends {
-                        if friend.id == $0.id {
+                        if friend.id == extendedUser.customUser.id {
                             return false
                         }
                     }

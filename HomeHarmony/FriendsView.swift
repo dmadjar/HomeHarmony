@@ -21,6 +21,8 @@ struct FriendsView: View {
             } else {
                 ForEach(viewModel.friends) { friend in
                     HStack(spacing: 5) {
+                        
+                        
                         Text(friend.firstName)
                         
                         Text(friend.lastName)

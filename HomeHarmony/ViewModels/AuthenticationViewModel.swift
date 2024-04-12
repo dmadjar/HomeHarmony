@@ -10,6 +10,7 @@ import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
+import PhotosUI
 
 enum AuthenticationState {
     case unauthenticated
@@ -26,6 +27,18 @@ enum AuthenticationFlow {
 class AuthenticationViewModel: ObservableObject {
     let db = Firestore.firestore()
     let storage = Storage.storage()
+    let storageRef = Storage.storage().reference().child("images")
+
+    @Published var imageData: Data?
+    @Published var imageSelection: PhotosPickerItem? {
+        didSet {
+            if let imageSelection {
+                Task {
+                    try await loadTransferable(from: imageSelection)
+                }
+            }
+        }
+    }
     
     @AppStorage("isDarkMode") var isDarkMode: Bool = true
     @Published var email = ""
@@ -41,7 +54,8 @@ class AuthenticationViewModel: ObservableObject {
     @Published var customUser: CustomUser?
     @Published var profilePicture: Image?
     
-    @Published var usersNotFriends: [CustomUser] = []
+    @Published var usersNotFriends: [ExtendedCustomUser] = []
+    
     @Published var requestsSent: [String?] = []
     @Published var friendRequests: [CustomUser] = []
     @Published var friends: [CustomUser] = []
@@ -123,6 +137,8 @@ class AuthenticationViewModel: ObservableObject {
         self.friends = []
         self.extendedFamilies = []
         self.yourTasks = []
+        self.imageData = nil
+        self.imageSelection = nil
     }
     
     func setDataLoading() {

@@ -15,21 +15,31 @@ struct AddFriendView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Add Friends")
-                .font(.custom("Sansita-ExtraBold", size: 36))
-                .foregroundStyle(Color("textColor"))
+            HStack {
+                Text("Add Friends")
+                    .font(.custom("Sansita-ExtraBold", size: 36))
+                    .foregroundStyle(Color("textColor"))
+                
+                Spacer()
+            }
             
             ScrollView {
                 VStack(spacing: 15) {
-                    ForEach(viewModel.usersNotFriends) { user in
-                        HStack(spacing: 5) {
-                            Text(user.firstName)
+                    ForEach(viewModel.usersNotFriends, id: \.customUser.id) { user in
+                        HStack(spacing: 10) {
+                            user.profilePhoto
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                                .scaledToFit()
+                                .cornerRadius(30)
                             
-                            Text(user.lastName)
+                            Text(user.customUser.firstName)
+                            
+                            Text(user.customUser.lastName)
                             
                             Spacer()
                             
-                            if viewModel.requested(friendId: user.id) {
+                            if viewModel.requested(friendId: user.customUser.id) {
                                 HStack {
                                     Text("Sent")
                                     
@@ -41,7 +51,7 @@ struct AddFriendView: View {
                                 .cornerRadius(5)
                             } else {
                                 Button {
-                                    viewModel.sendFriendRequest(friendId: user.id)
+                                    viewModel.sendFriendRequest(friendId: user.customUser.id)
                                 } label: {
                                     Image(systemName: "plus.circle.fill")
                                         .resizable()
@@ -63,7 +73,7 @@ struct AddFriendView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("backgroundColor"))
         .safeAreaInset(edge: .bottom) {
-            ButtonComponent(title: "Done", image: nil, backgroundColor: Color("textColor"), textColor: Color("defaultColor")) {
+            ButtonComponent(title: "Done", image: nil, backgroundColor: Color("blueColor"), textColor: Color("blackColor")) {
                 self.isAddingFriend = false
             }
             .padding()

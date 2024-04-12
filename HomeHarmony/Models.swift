@@ -5,7 +5,7 @@
 //  Created by Daniel Madjar on 3/25/24.
 //
 
-import Foundation
+import SwiftUI
 import FirebaseFirestore
 
 public struct CustomUser: Codable, Identifiable, Hashable {
@@ -13,6 +13,11 @@ public struct CustomUser: Codable, Identifiable, Hashable {
     var firstName: String
     var lastName: String
     // var requests: [String]?
+}
+
+public struct ExtendedCustomUser {
+    var customUser: CustomUser
+    var profilePhoto: Image
 }
 
 public struct TaskItem: Codable, Identifiable {
